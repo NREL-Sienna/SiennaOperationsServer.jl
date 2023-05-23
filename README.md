@@ -103,7 +103,7 @@ dataframe package, but you can use others if you prefer.
 ```
 $ conda create -n sienna-client python=3.10
 $ conda activate sienna-client
-$ pip install -e python_client polars 
+$ pip install -e python_client polars requests
 ```
 
 3. Run a simulation.

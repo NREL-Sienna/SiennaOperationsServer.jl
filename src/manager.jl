@@ -340,9 +340,7 @@ end
 
 function list_decision_problems(manager::Manager, id::Int)
     results = _get_cached_simulation_results(manager, id)
-    problems = PSI.list_decision_problems(results)
-    @show problems
-    return problems
+    return PSI.list_decision_problems(results)
 end
 
 function list_aux_variable_names(manager::Manager, id::Int, problem_name)

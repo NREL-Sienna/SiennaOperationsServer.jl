@@ -609,8 +609,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListNamesResponse'
-                items:
-                  type: string
         "500":
           description: Default error response.
       security: []
@@ -876,9 +874,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ListSystemsResponse'
+                $ref: '#/components/schemas/ListSystemsResponse'
         "500":
           description: Default error response.
       security: []

@@ -28,8 +28,7 @@ function post_simulation(req::HTTP.Request, api_sim::ApiServer.Simulation)
 end
 
 function post_system(req::HTTP.Request, body::ApiServer.PostSystemBody)
-    uuid = add_system!(manager, body)
-    return ApiServer.System(uuid=uuid)
+    return add_system!(manager, body)
 end
 
 function post_system_case(
@@ -38,8 +37,7 @@ function post_system_case(
     name::String;
     force_build=false,
 )
-    uuid = add_system_from_case!(manager, category, name; force_build=force_build)
-    return ApiServer.System(uuid=uuid)
+    return add_system_from_case!(manager, category, name; force_build=force_build)
 end
 
 function get_simulation_status(req::HTTP.Request, id; clear_progress_events=true)
