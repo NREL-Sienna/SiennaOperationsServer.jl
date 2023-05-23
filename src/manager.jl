@@ -38,15 +38,15 @@ function add_system!(manager::Manager, item)
         error("path = $(item.path) is not a valid file")
     end
     system = PSY.System(item.path)
-    _store_system!(manager, system)
+    return _store_system!(manager, system)
 end
 
-function add_system_from_case!(manager::Manager, category, name; force_build = false)
+function add_system_from_case!(manager::Manager, category, name; force_build=false)
     if isnothing(force_build)
         force_build = false
     end
-    system = make_system_from_case(category, name; force_build = force_build)
-    _store_system!(manager, system)
+    system = make_system_from_case(category, name; force_build=force_build)
+    return _store_system!(manager, system)
 end
 
 function get_cached_simulation_instance(manager::Manager, name::String)
@@ -121,21 +121,22 @@ end
 Return the status for this simulation.
 
 # Arguments
-- `manager::Manager`: Manager
-- `name::String`: Simulation name
-- `clear_progress_events::Bool`: If true, clear progress events the read.
+
+  - `manager::Manager`: Manager
+  - `name::String`: Simulation name
+  - `clear_progress_events::Bool`: If true, clear progress events the read.
 """
 function get_simulation_status!(manager::Manager, id::Int, clear_progress_events)
     context = get_simulation_context(manager, id)
     lock(context.lock) do
         status = ApiServer.SimulationStatus(
-            simulation_id = context.id,
-            name = context.name,
-            path = context.path,
-            status = context.status,
-            start_time = string(context.start_time),
-            worker_pid = context.worker_pid,
-            progress_events = context.progress_events[:],
+            simulation_id=context.id,
+            name=context.name,
+            path=context.path,
+            status=context.status,
+            start_time=string(context.start_time),
+            worker_pid=context.worker_pid,
+            progress_events=context.progress_events[:],
         )
         if clear_progress_events
             empty!(context.progress_events)
@@ -148,9 +149,10 @@ end
 Return the status for all simulations.
 
 # Arguments
-- `manager::Manager`: Manager
-- `clear_progress_events::Bool`: If true, clear progress events the read.
-- `status::String`: If set, filter by this status.
+
+  - `manager::Manager`: Manager
+  - `clear_progress_events::Bool`: If true, clear progress events the read.
+  - `status::String`: If set, filter by this status.
 """
 function list_simulation_statuses!(manager::Manager, clear_progress_events, status=nothing)
     statuses = Vector{ApiServer.SimulationStatus}()
@@ -182,12 +184,12 @@ function check_status!(manager::Manager, context::SimulationContext)
     while isready(context.channels.results)
         results = take!(context.channels.results)
         event = ApiServer.SimulationProgressEvent(
-            model_name = results.progress_event.model_name,
-            step = results.progress_event.step,
-            index = results.progress_event.index,
-            timestamp = string(results.progress_event.timestamp),
-            wall_time = string(results.progress_event.wall_time),
-            exec_time_s = results.progress_event.exec_time_s,
+            model_name=results.progress_event.model_name,
+            step=results.progress_event.step,
+            index=results.progress_event.index,
+            timestamp=string(results.progress_event.timestamp),
+            wall_time=string(results.progress_event.wall_time),
+            exec_time_s=results.progress_event.exec_time_s,
         )
         lock(context.lock) do
             push!(context.progress_events, event)
@@ -229,29 +231,27 @@ function start_simulation_async!(
     num_running = get_num_running_simulations(manager)
     if Distributed.nworkers() - num_running <= 0
         # TODO: implement queuing
-        error("There are not enough worker processes to run a simulation. " *
-              "num_running=$(num_running) num_workers=$(Distributed.nworkers())")
+        error(
+            "There are not enough worker processes to run a simulation. " *
+            "num_running=$(num_running) num_workers=$(Distributed.nworkers())",
+        )
     end
 
     # This is 1 because any new command will overwrite the previous one.
-    commands = RemoteChannel(() -> Channel{PSI.ControlCommand}(1));
-    results = RemoteChannel(() -> Channel{PSI.SimulationIntermediateResult}(10));
-    done = RemoteChannel(() -> Channel{SimulationExecutionResult}(1));
+    commands = RemoteChannel(() -> Channel{PSI.ControlCommand}(1))
+    results = RemoteChannel(() -> Channel{PSI.SimulationIntermediateResult}(10))
+    done = RemoteChannel(() -> Channel{SimulationExecutionResult}(1))
 
     worker = _get_available_worker!(manager)
-    channels = CommunicationChannels(
-        commands,
-        results,
-        done,
-    )
+    channels = CommunicationChannels(commands, results, done)
     remote_do(run_simulation, worker, simulation, output_dir, channels)
     context = SimulationContext(;
-        id = _get_next_simulation_id!(manager),
-        name = simulation.name,
-        status = "running",
-        start_time = Dates.now(),
-        worker_pid = worker,
-        channels = channels,
+        id=_get_next_simulation_id!(manager),
+        name=simulation.name,
+        status="running",
+        start_time=Dates.now(),
+        worker_pid=worker,
+        channels=channels,
     )
     manager.simulation_contexts[context.id] = context
     @info "Started simulation" context.id context.name worker
@@ -271,13 +271,13 @@ function start_simulation_async!(
     schedule(update_task)
 
     status = ApiServer.SimulationStatus(
-        simulation_id = context.id,
-        name = context.name,
-        path = "",
-        status = context.status,
-        start_time = string(context.start_time),
-        worker_pid = context.worker_pid,
-        progress_events = context.progress_events[:],
+        simulation_id=context.id,
+        name=context.name,
+        path="",
+        status=context.status,
+        start_time=string(context.start_time),
+        worker_pid=context.worker_pid,
+        progress_events=context.progress_events[:],
     )
     return status
 end
@@ -286,17 +286,18 @@ end
 Cancel a simulation by sending the equivalent of Ctrl-C to the process.
 
 # Arguments
-- `manager::Manager`: Manager
-- `name::String`: Simulation name
+
+  - `manager::Manager`: Manager
+  - `name::String`: Simulation name
 """
 function cancel_simulation!(manager::Manager, id::Int)
     context = get_simulation_context(manager, id)
     Distributed.interrupt(context.worker_pid)
-    _complete_simulation!(manager, context, -1; canceled = true)
+    _complete_simulation!(manager, context, -1; canceled=true)
     @info "Canceled simulation $id $(context.name)"
 end
 
-function _complete_simulation!(manager::Manager, context, result; canceled = false)
+function _complete_simulation!(manager::Manager, context, result; canceled=false)
     pop!(manager.in_use_workers, context.worker_pid)
     exec_time_s = Dates.Millisecond(Dates.now() - context.start_time).value / 1000
     context.status = canceled ? "canceled" : "done"
@@ -327,7 +328,6 @@ function cache_simulation_results!(manager, id::Int)
 end
 
 function discard_simulation_results!(manager, id::Int)
-    context = get_simulation_context(manager, id)
     res = pop!(manager.cached_simulation_results, id, nothing)
     if !isnothing(res)
         @info "Discarded cached results for simulation ID $id"
@@ -339,11 +339,30 @@ function list_cached_simulation_results(manager)
 end
 
 function list_decision_problems(manager::Manager, id::Int)
-    context = get_simulation_context(manager, id)
     results = _get_cached_simulation_results(manager, id)
     problems = PSI.list_decision_problems(results)
     @show problems
     return problems
+end
+
+function list_aux_variable_names(manager::Manager, id::Int, problem_name)
+    results = _get_cached_decision_problem_results(manager, id, problem_name)
+    return PSI.list_aux_variable_names(results)
+end
+
+function list_dual_names(manager::Manager, id::Int, problem_name)
+    results = _get_cached_decision_problem_results(manager, id, problem_name)
+    return PSI.list_dual_names(results)
+end
+
+function list_expression_names(manager::Manager, id::Int, problem_name)
+    results = _get_cached_decision_problem_results(manager, id, problem_name)
+    return PSI.list_expression_names(results)
+end
+
+function list_parameter_names(manager::Manager, id::Int, problem_name)
+    results = _get_cached_decision_problem_results(manager, id, problem_name)
+    return PSI.list_parameter_names(results)
 end
 
 function list_variable_names(manager::Manager, id::Int, problem_name)
@@ -351,7 +370,47 @@ function list_variable_names(manager::Manager, id::Int, problem_name)
     return PSI.list_variable_names(results)
 end
 
-function read_realized_variable_results(manager::Manager, id::Int, problem_name, variable_name)
+function read_realized_aux_variable_results(
+    manager::Manager,
+    id::Int,
+    problem_name,
+    aux_variable_name,
+)
+    results = _get_cached_decision_problem_results(manager, id, problem_name)
+    return PSI.read_realized_aux_variable(results, aux_variable_name)
+end
+
+function read_realized_dual_results(manager::Manager, id::Int, problem_name, dual_name)
+    results = _get_cached_decision_problem_results(manager, id, problem_name)
+    return PSI.read_realized_dual(results, dual_name)
+end
+
+function read_realized_expression_results(
+    manager::Manager,
+    id::Int,
+    problem_name,
+    expression_name,
+)
+    results = _get_cached_decision_problem_results(manager, id, problem_name)
+    return PSI.read_realized_expression(results, expression_name)
+end
+
+function read_realized_parameter_results(
+    manager::Manager,
+    id::Int,
+    problem_name,
+    parameter_name,
+)
+    results = _get_cached_decision_problem_results(manager, id, problem_name)
+    return PSI.read_realized_parameter(results, parameter_name)
+end
+
+function read_realized_variable_results(
+    manager::Manager,
+    id::Int,
+    problem_name,
+    variable_name,
+)
     results = _get_cached_decision_problem_results(manager, id, problem_name)
     return PSI.read_realized_variable(results, variable_name)
 end
@@ -364,74 +423,75 @@ function _store_system!(manager::Manager, system::PSY.System)
     haskey(manager.systems, uuid) && error("A system with UUID $(uuid) is already stored.")
     resolution = string(Dates.Minute(PSY.get_time_series_resolution(system)))
     api_system = ApiServer.System(;
-        uuid = string(uuid),
-        name = PSY.get_name(system),
-        description = PSY.get_description(system),
-        forecast_initial_times = string.(PSY.get_forecast_initial_times(system)),
-        forecast_window_count = PSY.get_forecast_window_count(system),
-        forecast_horizon = PSY.get_forecast_horizon(system),
-        forecast_initial_timestamp = string(PSY.get_forecast_initial_timestamp(system)),
-        forecast_interval = string(PSY.get_forecast_interval(system)),
-        time_series_resolution = resolution,
+        uuid=string(uuid),
+        name=PSY.get_name(system),
+        description=PSY.get_description(system),
+        forecast_initial_times=string.(PSY.get_forecast_initial_times(system)),
+        forecast_window_count=PSY.get_forecast_window_count(system),
+        forecast_horizon=PSY.get_forecast_horizon(system),
+        forecast_initial_timestamp=string(PSY.get_forecast_initial_timestamp(system)),
+        forecast_interval=string(PSY.get_forecast_interval(system)),
+        time_series_resolution=resolution,
     )
     manager.systems[uuid] = CachedInstance(api_system, system)
     @info "Successfully stored $api_system"
-    return
+    return api_system
 end
 
 """
-Save the simulations and results to a file.
+Return the contents of the store.
 """
-function save(manager::Manager; filename = SIMULATIONS_FILENAME)
-    data = Dict(
-        "simulations" => [JSON3.read(OpenAPI.to_json(x), Dict) for x in list_simulations(ApiServer.Simulation, manager)],
-        "statuses" => [JSON3.read(OpenAPI.to_json(x), Dict) for x in list_simulation_statuses!(manager, false)],
+function get_store(manager::Manager)
+    return ApiServer.Store(
+        simulations=list_simulations(ApiServer.Simulation, manager),
+        statuses=list_simulation_statuses!(manager, false),
     )
-    open(filename, "w") do io
-        JSON3.pretty(io, data, JSON3.AlignmentContext(indent=2))
-    end
-    return
 end
 
 """
-Load simulations and results from a file created by calling save().
+Load the passed data into the store.
 """
-function load!(manager::Manager; filename = SIMULATIONS_FILENAME)
-    data = open(filename, "r") do io
-        JSON3.read(io, Dict)
-    end
-    manager_data = OpenAPI.from_json(ApiServer.ManagerData, data)
-
+function load_store!(manager::Manager, store::ApiServer.Store)
     # Check for errors before adding anything.
-    for item in manager_data.simulations
+    for item in store.simulations
         if haskey(manager.simulations, item.name)
             error("Simulation $(item.name) is already stored")
         end
     end
-    for item in manager_data.statuses
+    for item in store.statuses
         if haskey(manager.simulation_contexts, item.simulation_id)
             error("Simulation ID $(item.simulation_id) is already stored")
         end
     end
 
-    for sim in manager_data.simulations
+    for sim in store.simulations
         add_simulation!(manager, sim)
     end
-    for status in manager_data.statuses
+    for status in store.statuses
         manager.simulation_contexts[status.simulation_id] = SimulationContext(;
-            id = status.simulation_id,
-            name = status.name,
-            path = status.path,
-            status = status.status,
-            start_time = DateTime(status.start_time),
-            worker_pid = status.worker_pid,
-            progress_events = status.progress_events,
+            id=status.simulation_id,
+            name=status.name,
+            path=status.path,
+            status=status.status,
+            start_time=DateTime(status.start_time),
+            worker_pid=status.worker_pid,
+            progress_events=status.progress_events,
         )
     end
 
-    num_simulations = length(manager_data.simulations)
-    num_statuses = length(manager_data.statuses)
+    num_simulations = length(store.simulations)
+    num_statuses = length(store.statuses)
     @info "Loaded $num_simulations simulations and $num_statuses simulation statuses"
+end
+
+"""
+Delete the data in the store.
+"""
+function delete_store!(manager::Manager)
+    empty!(manager.simulations)
+    empty!(manager.systems)
+    empty!(manager.simulation_contexts)
+    empty!(manager.cached_simulation_results)
 end
 
 # TODO: add function to load simulation result from directory (not run through server)

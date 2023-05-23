@@ -20,10 +20,7 @@ function make_simulation(sim::ApiServer.Simulation, output_dir)
         template = PSI.ProblemTemplate()
         PSI.set_network_model!(
             template,
-            PSI.NetworkModel(
-                network_type,
-                use_slacks=use_slacks,
-            ),
+            PSI.NetworkModel(network_type, use_slacks=use_slacks),
         )
         for api_device_model in api_model.template.devices
             device_type = getproperty(PSY, Symbol(api_device_model.device_type))
@@ -49,20 +46,20 @@ function make_simulation(sim::ApiServer.Simulation, output_dir)
     end
 
     sequence = PSI.SimulationSequence(;
-        models = models,
-        feedforwards = feedforwards,
-        ini_cond_chronology = getproperty(
+        models=models,
+        feedforwards=feedforwards,
+        ini_cond_chronology=getproperty(
             PSI,
             Symbol(sim.sequence.initial_condition_chronology_type),
         )(),
     )
 
     return PSI.Simulation(
-        name = sim.name,
-        steps = sim.num_steps,
-        sequence = sequence,
-        models = models,
-        simulation_folder = output_dir,
+        name=sim.name,
+        steps=sim.num_steps,
+        sequence=sequence,
+        models=models,
+        simulation_folder=output_dir,
     )
 end
 
@@ -77,16 +74,16 @@ function run_simulation(simulation::ApiServer.Simulation, output_dir, channels)
     end
     mkpath(output_dir)
     sim = make_simulation(simulation, output_dir)
-    build_status = PSI.build!(sim; console_level = Logging.AboveMaxLevel)
+    build_status = PSI.build!(sim; console_level=Logging.AboveMaxLevel)
     run_status = PSI.RunStatus.NOT_READY
     path = PSI.get_simulation_dir(sim)
     if build_status != PSI.BuildStatus.BUILT
         @error "Failed to build the simulation: $build_status"
         result = SimulationExecutionResult(
-            return_code = 1,
-            build_status = build_status.value,
-            run_status = run_status.value,
-            path = path,
+            return_code=1,
+            build_status=build_status.value,
+            run_status=run_status.value,
+            path=path,
         )
         put!(channels.done, result)
         return
@@ -97,9 +94,9 @@ function run_simulation(simulation::ApiServer.Simulation, output_dir, channels)
     try
         run_status = PSI.execute!(
             sim;
-            enable_progress_bar = false,
-            commands_channel = channels.commands,
-            results_channel = channels.results,
+            enable_progress_bar=false,
+            commands_channel=channels.commands,
+            results_channel=channels.results,
         )
         if run_status == PSI.RunStatus.SUCCESSFUL
             return_code = 0
@@ -107,10 +104,10 @@ function run_simulation(simulation::ApiServer.Simulation, output_dir, channels)
     finally
         @info "Simulation is complete" simulation.name
         result = SimulationExecutionResult(
-            return_code = return_code,
-            build_status = build_status.value,
-            run_status = run_status.value,
-            path = path,
+            return_code=return_code,
+            build_status=build_status.value,
+            run_status=run_status.value,
+            path=path,
         )
         put!(channels.done, result)
     end
@@ -118,17 +115,17 @@ end
 
 function _make_feedforward(ff::ApiServer.EnergyLimitFeedforward)
     return PSI.EnergyLimitFeedforward(
-        component_type = getproperty(PSY, Symbol(ff.component_type)),
-        source = getproperty(PSI, Symbol(ff.source)),
-        affected_values = [getproperty(PSI, x) for x in ff.affected_values],
-        number_of_periods = ff.number_of_periods,
+        component_type=getproperty(PSY, Symbol(ff.component_type)),
+        source=getproperty(PSI, Symbol(ff.source)),
+        affected_values=[getproperty(PSI, x) for x in ff.affected_values],
+        number_of_periods=ff.number_of_periods,
     )
 end
 
 function _make_feedforward(ff::ApiServer.SemiContinuousFeedforward)
     return PSI.SemiContinuousFeedforward(
-        component_type = getproperty(PSY, Symbol(ff.component_type)),
-        source = getproperty(PSI, Symbol(ff.source)),
-        affected_values = [getproperty(PSI, x) for x in ff.affected_values],
+        component_type=getproperty(PSY, Symbol(ff.component_type)),
+        source=getproperty(PSI, Symbol(ff.source)),
+        affected_values=[getproperty(PSI, x) for x in ff.affected_values],
     )
 end

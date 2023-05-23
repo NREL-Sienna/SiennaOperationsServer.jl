@@ -14,7 +14,7 @@ Base.@kwdef struct CommunicationChannels
     done::RemoteChannel
 end
 
-@Base.kwdef mutable struct SimulationContext
+Base.@kwdef mutable struct SimulationContext
     id::Int
     name::String
     path::String = ""
@@ -24,11 +24,12 @@ end
     return_code::Int = -1
     exec_time_s::Float64 = -1.0
     channels::Union{Nothing, CommunicationChannels} = nothing
-    progress_events::Vector{ApiServer.SimulationProgressEvent} = Vector{ApiServer.SimulationProgressEvent}()
+    progress_events::Vector{ApiServer.SimulationProgressEvent} =
+        Vector{ApiServer.SimulationProgressEvent}()
     lock::ReentrantLock = ReentrantLock()
 end
 
-@Base.kwdef struct SimulationExecutionResult
+Base.@kwdef struct SimulationExecutionResult
     return_code::Int
     build_status::Int
     run_status::Int

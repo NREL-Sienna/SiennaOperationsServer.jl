@@ -1,27 +1,24 @@
 openapi: 3.0.3
 info:
-  title: PowerSimulations
-  description: This is a PowerSimulations server.
+  title: SiennaOperationsSimulations
+  description: This is a SiennaOperationsSimulations server.
   license:
     name: BSD 3-Clause
   version: 1.0
 paths:
-  /load:
+  /store:
     post:
       tags: []
-      summary: Load results from a file.
-      description: Load results from a file.
-      operationId: load
-      parameters:
-      - name: filename
-        in: query
-        description: Filename
-        required: false
-        style: simple
-        explode: false
-        schema:
-          type: string
-          default: simulations.json
+      summary: Load saved data.
+      description: Load saved data.
+      operationId: load_store
+      requestBody:
+        description: Saved data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+        required: true
       responses:
         "200":
           description: Response
@@ -33,22 +30,27 @@ paths:
           description: Default error response.
       security: []
       x-codegen-request-body-name: body
-  /save:
     get:
       tags: []
-      summary: Save results to a file.
-      description: Save results to a file.
-      operationId: save
-      parameters:
-      - name: filename
-        in: query
-        description: Filename
-        required: false
-        style: simple
-        explode: false
-        schema:
-          type: string
-          default: simulations.json
+      summary: Get the contents of the data store.
+      description: Get the contents of the data store.
+      operationId: get_store
+      responses:
+        "200":
+          description: Response
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+    delete:
+      tags: []
+      summary: Delete the contents of the data store.
+      description: Delete the contents of the data store.
+      operationId: delete_store
       responses:
         "200":
           description: Response
@@ -260,7 +262,319 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListDecisionProblemsResponse'
+                $ref: '#/components/schemas/ListNamesResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/aux_variables:
+    get:
+      summary: Retrieve the aux_variable names in a decision problem.
+      description: aux_variable names in a decision problem a simulation.
+      operationId: list_aux_variable_names
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Decision problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Auxiliary variable names
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNamesResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/aux_variables/{aux_variable_name}/realized_results:
+    get:
+      summary: Retrieve the realized results for a aux_variable.
+      description: aux_variable names in a decision problem a simulation.
+      operationId: read_realized_aux_variable_results
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: aux_variable_name
+        in: path
+        description: aux_variable name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Table of results
+          content:
+            application/json:
+              schema:
+                # We could consider transferring as a string instead. Might be faster
+                # for the destination library to decode the table to a dataframe.
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/duals:
+    get:
+      summary: Retrieve the dual names in a decision problem.
+      description: dual names in a decision problem a simulation.
+      operationId: list_dual_names
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Decision problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: dual names
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNamesResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/duals/{dual_name}/realized_results:
+    get:
+      summary: Retrieve the realized results for a dual.
+      description: dual names in a decision problem a simulation.
+      operationId: read_realized_dual_results
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: dual_name
+        in: path
+        description: dual name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Table of results
+          content:
+            application/json:
+              schema:
+                # We could consider transferring as a string instead. Might be faster
+                # for the destination library to decode the table to a dataframe.
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/expressions:
+    get:
+      summary: Retrieve the expression names in a decision problem.
+      description: expression names in a decision problem a simulation.
+      operationId: list_expression_names
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Decision problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: expression names
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNamesResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/expressions/{expression_name}/realized_results:
+    get:
+      summary: Retrieve the realized results for a expression.
+      description: expression names in a decision problem a simulation.
+      operationId: read_realized_expression_results
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: expression_name
+        in: path
+        description: expression name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Table of results
+          content:
+            application/json:
+              schema:
+                # We could consider transferring as a string instead. Might be faster
+                # for the destination library to decode the table to a dataframe.
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/parameters:
+    get:
+      summary: Retrieve the parameter names in a decision problem.
+      description: parameter names in a decision problem a simulation.
+      operationId: list_parameter_names
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Decision problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: parameter names
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNamesResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/parameters/{parameter_name}/realized_results:
+    get:
+      summary: Retrieve the realized results for a parameter.
+      description: parameter names in a decision problem a simulation.
+      operationId: read_realized_parameter_results
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: parameter_name
+        in: path
+        description: parameter name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Table of results
+          content:
+            application/json:
+              schema:
+                # We could consider transferring as a string instead. Might be faster
+                # for the destination library to decode the table to a dataframe.
+                type: object
         "500":
           description: Default error response.
       security: []
@@ -294,7 +608,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
+                $ref: '#/components/schemas/ListNamesResponse'
                 items:
                   type: string
         "500":
@@ -1124,7 +1438,7 @@ components:
       properties:
         path:
           type: string
-    ManagerData:
+    Store:
       required:
       - simulations
       - statuses
@@ -1138,12 +1452,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SimulationStatus'
-    ListDecisionProblemsResponse:
+    ListNamesResponse:
       required:
-      - decision_problems
+      - names
       type: object
       properties:
-        systems:
+        names:
           type: array
           items:
             type: string
