@@ -34,8 +34,9 @@
           ]
         },
         "system": {
-          "descriptor_type": "SystemPath",
-          "path": "sys5.json"
+          "descriptor_type": "SystemCase",
+          "category": "PSITestSystems",
+          "name": "c_sys5"
         },
         "warm_start": true
       }
