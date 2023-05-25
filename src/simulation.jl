@@ -17,7 +17,8 @@ function make_simulation(sim::ApiServer.Simulation, output_dir)
         decision_problem_type = _convert_string_to_type(PSI, api_model.decision_problem_type)
         network_type = _convert_string_to_type(PSI, api_model.template.network.network_type)
         use_slacks = api_model.template.network.use_slacks
-        duals = [_convert_string_to_type(PSI, x) for x in api_model.template.network.duals]
+        api_duals = isnothing(api_model.template.network.duals) ? [] : api_model.template.network.duals
+        duals = [_convert_string_to_type(PSI, x) for x in api_duals]
         if isnothing(api_model.template.network.ptdf_matrix)
             network = PSI.NetworkModel(network_type, use_slacks=use_slacks, duals=duals)
         else
