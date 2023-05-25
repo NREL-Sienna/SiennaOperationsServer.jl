@@ -14,20 +14,31 @@ function make_simulation(sim::ApiServer.Simulation, output_dir)
         optimizer = JuMP.optimizer_with_attributes(optimizer_type, kwargs...)
         # TODO: Add support for time_series_read_only to PSB.
         sys = _make_system(api_model.system.value)
-        decision_problem_type = getproperty(PSI, Symbol(api_model.decision_problem_type))
-        network_type = getproperty(PSI, Symbol(api_model.template.network.network_type))
+        decision_problem_type = _convert_string_to_type(PSI, api_model.decision_problem_type)
+        network_type = _convert_string_to_type(PSI, api_model.template.network.network_type)
         use_slacks = api_model.template.network.use_slacks
+        duals = [_convert_string_to_type(PSI, x) for x in api_model.template.network.duals]
+        if isnothing(api_model.template.network.ptdf_matrix)
+            network = PSI.NetworkModel(network_type, use_slacks=use_slacks, duals=duals)
+        else
+            ptdf_matrix = _convert_string_to_type(PSI, api_model.template.network.ptdf_matrix)
+            network = PSI.NetworkModel(network_type, use_slacks=use_slacks, duals=duals, PTDF_matrix=ptdf_matrix)
+        end
+
         template = PSI.ProblemTemplate()
-        PSI.set_network_model!(
-            template,
-            PSI.NetworkModel(network_type, use_slacks=use_slacks),
-        )
-        for api_device_model in api_model.template.devices
-            device_type = getproperty(PSY, Symbol(api_device_model.device_type))
-            formulation_type = getproperty(PSI, Symbol(api_device_model.formulation))
+        PSI.set_network_model!(template, network)
+        for device_model in api_model.template.devices
+            device_type = _convert_string_to_type(PSY, device_model.device_type)
+            formulation_type = _convert_string_to_type(PSI, device_model.formulation)
             PSI.set_device_model!(template, device_type, formulation_type)
         end
-        decision_model = PSI.DecisionModel{decision_problem_type}(
+        for service_model in api_model.template.services
+            service_type = _convert_string_to_type(PSY, service_model.service_type)
+            formulation_type = _convert_string_to_type(PSI, service_model.formulation)
+            PSI.set_service_model!(template, service_type, formulation_type)
+        end
+        decision_model = PSI.DecisionModel(
+            decision_problem_type,
             template,
             sys;
             name=api_model.name,
@@ -37,9 +48,9 @@ function make_simulation(sim::ApiServer.Simulation, output_dir)
     end
 
     models = PSI.SimulationModels(decision_models=decision_models)
-    feedforwards = Dict{String, Vector{<:PSI.AbstractAffectFeedforward}}()
+    feedforwards = Dict{String, Vector{PSI.AbstractAffectFeedforward}}()
     for ff_by_model in sim.sequence.feedforwards_by_model
-        feedforwards[ff_by_model.model_name] = Vector{<:PSI.AbstractAffectFeedforward}()
+        feedforwards[ff_by_model.model_name] = Vector{PSI.AbstractAffectFeedforward}()
         for ff in ff_by_model.feedforwards
             push!(feedforwards[ff_by_model.model_name], _make_feedforward(ff.value))
         end
@@ -48,10 +59,7 @@ function make_simulation(sim::ApiServer.Simulation, output_dir)
     sequence = PSI.SimulationSequence(;
         models=models,
         feedforwards=feedforwards,
-        ini_cond_chronology=getproperty(
-            PSI,
-            Symbol(sim.sequence.initial_condition_chronology_type),
-        )(),
+        ini_cond_chronology=_convert_string_to_type(PSI, sim.sequence.initial_condition_chronology_type)(),
     )
 
     return PSI.Simulation(
@@ -113,19 +121,34 @@ function run_simulation(simulation::ApiServer.Simulation, output_dir, channels)
     end
 end
 
+function _make_feedforward(data::Dict)
+    # We shouldn't have to do this manually, but OpenAPI is not deserializing into types.
+    type = _convert_string_to_type(ApiServer, data["feedforward_type"])
+    ff = type(; Dict(Symbol(k) => v for (k, v) in data)...)
+    return _make_feedforward(ff)
+end
+
 function _make_feedforward(ff::ApiServer.EnergyLimitFeedforward)
     return PSI.EnergyLimitFeedforward(
-        component_type=getproperty(PSY, Symbol(ff.component_type)),
-        source=getproperty(PSI, Symbol(ff.source)),
-        affected_values=[getproperty(PSI, x) for x in ff.affected_values],
+        component_type=_convert_string_to_type(PSY, ff.component_type),
+        source=_convert_string_to_type(PSI, ff.source),
+        affected_values=[_convert_string_to_type(PSI, x) for x in ff.affected_values],
         number_of_periods=ff.number_of_periods,
+    )
+end
+
+function _make_feedforward(ff::ApiServer.FixValueFeedforward)
+    return PSI.FixValueFeedforward(
+        component_type=_convert_string_to_type(PSY, ff.component_type),
+        source=_convert_string_to_type(PSI, ff.source),
+        affected_values=[_convert_string_to_type(PSI, x) for x in ff.affected_values],
     )
 end
 
 function _make_feedforward(ff::ApiServer.SemiContinuousFeedforward)
     return PSI.SemiContinuousFeedforward(
-        component_type=getproperty(PSY, Symbol(ff.component_type)),
-        source=getproperty(PSI, Symbol(ff.source)),
-        affected_values=[getproperty(PSI, x) for x in ff.affected_values],
+        component_type=_convert_string_to_type(PSY, ff.component_type),
+        source=_convert_string_to_type(PSI, ff.source),
+        affected_values=[_convert_string_to_type(PSI, x) for x in ff.affected_values],
     )
 end

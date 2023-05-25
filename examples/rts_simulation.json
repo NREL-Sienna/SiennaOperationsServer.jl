@@ -1,0 +1,178 @@
+{
+  "name": "compact_sim",
+  "num_steps": 2,
+  "models": {
+    "decision_models": [
+      {
+        "name": "UC",
+        "calculate_conflict": true,
+        "direct_mode_optimizer": true,
+        "initialize_model": true,
+        "optimizer_solve_log_print": false,
+        "rebuild_model": false,
+        "store_variable_names": true,
+        "system_to_file": false,
+        "optimizer": {
+          "optimizer_type": "XpressOptimizer",
+          "mipgap": 1e-2
+        },
+        "template": {
+          "devices": [
+            {
+              "device_type": "HydroEnergyReservoir",
+              "formulation": "HydroDispatchRunOfRiver"
+            },
+            {
+              "device_type": "Line",
+              "formulation": "StaticBranch"
+            },
+            {
+              "device_type": "PowerLoad",
+              "formulation": "StaticPowerLoad"
+            },
+            {
+              "device_type": "RenewableDispatch",
+              "formulation": "RenewableFullDispatch"
+            },
+            {
+              "device_type": "RenewableFix",
+              "formulation": "FixedOutput"
+            },
+            {
+              "device_type": "TapTransformer",
+              "formulation": "StaticBranchUnbounded"
+            },
+            {
+              "device_type": "ThermalStandard",
+              "formulation": "ThermalBasicUnitCommitment"
+            },
+            {
+              "device_type": "ThermalStandard",
+              "formulation": "ThermalStandardUnitCommitment"
+            }
+          ],
+          "network": {
+            "network_type": "StandardPTDFModel",
+            "use_slacks": false,
+            "pdtf_matrix": "PTDF",
+            "duals": ["CopperPlateBalanceConstraint"]
+          },
+          "services": [
+            {
+              "service_type": "VariableReserve{ReserveUp}",
+              "formulation": "RangeReserve"
+            },
+            {
+              "service_type": "VariableReserve{ReserveDown}",
+              "formulation": "RangeReserve"
+            }
+          ]
+        },
+        "system": {
+          "descriptor_type": "SystemCase",
+          "category": "PSISystems",
+          "name": "modified_RTS_GMLC_DA_sys"
+        }
+      },
+      {
+        "name": "ED",
+        "calculate_conflict": true,
+        "direct_mode_optimizer": true,
+        "initialize_model": true,
+        "optimizer_solve_log_print": false,
+        "rebuild_model": false,
+        "store_variable_names": true,
+        "system_to_file": false,
+        "optimizer": {
+          "optimizer_type": "XpressOptimizer",
+          "mipgap": 1e-2
+        },
+        "template": {
+          "devices": [
+            {
+              "device_type": "HydroEnergyReservoir",
+              "formulation": "HydroDispatchRunOfRiver"
+            },
+            {
+              "device_type": "PowerLoad",
+              "formulation": "StaticPowerLoad"
+            },
+            {
+              "device_type": "RenewableFix",
+              "formulation": "FixedOutput"
+            },
+            {
+              "device_type": "RenewableDispatch",
+              "formulation": "RenewableFullDispatch"
+            },
+            {
+              "device_type": "TapTransformer",
+              "formulation": "StaticBranchUnbounded"
+            },
+            {
+              "device_type": "ThermalStandard",
+              "formulation": "ThermalBasicDispatch"
+            },
+            {
+              "device_type": "ThermalStandard",
+              "formulation": "ThermalStandardDispatch"
+            },
+            {
+              "device_type": "ThermalStandard",
+              "formulation": "ThermalStandardUnitCommitment"
+            }
+          ],
+          "network": {
+            "network_type": "StandardPTDFModel",
+            "use_slacks": true,
+            "pdtf_matrix": "PTDF",
+            "duals": ["CopperPlateBalanceConstraint"]
+          },
+          "services": [
+            {
+              "service_type": "VariableReserve{ReserveUp}",
+              "formulation": "RangeReserve"
+            },
+            {
+              "service_type": "VariableReserve{ReserveDown}",
+              "formulation": "RangeReserve"
+            }
+          ]
+        },
+        "system": {
+          "descriptor_type": "SystemCase",
+          "category": "PSISystems",
+          "name": "modified_RTS_GMLC_RT_sys"
+        }
+      }
+    ]
+  },
+  "sequence": {
+    "initial_condition_chronology_type": "InterProblemChronology",
+    "feedforwards_by_model": [
+      {
+        "model_name": "ED",
+        "feedforwards": [
+          {
+            "feedforward_type": "SemiContinuousFeedforward",
+            "component_type": "ThermalStandard",
+            "source": "OnVariable",
+            "affected_values": ["ActivePowerVariable"]
+          },
+          {
+            "feedforward_type": "FixValueFeedforward",
+            "component_type": "VariableReserve{ReserveUp}",
+            "source": "ActivePowerReserveVariable",
+            "affected_values": ["ActivePowerReserveVariable"]
+          },
+          {
+            "feedforward_type": "FixValueFeedforward",
+            "component_type": "VariableReserve{ReserveDown}",
+            "source": "ActivePowerReserveVariable",
+            "affected_values": ["ActivePowerReserveVariable"]
+          }
+        ]
+      }
+    ]
+  }
+}

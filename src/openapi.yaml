@@ -1129,6 +1129,14 @@ components:
           type: string
         use_slacks:
           type: boolean
+          default: false
+        ptdf_matrix:
+          type: string
+        duals:
+          type: array
+          items:
+            type: string
+          default: []
     ServiceModel:
       type: object
       properties:
@@ -1193,11 +1201,11 @@ components:
       - name
       - system
       - template
-      - decision_problem_type
       type: object
       properties:
         decision_problem_type:
           type: string
+          default: GenericOpProblem
         name:
           type: string
         template:
@@ -1265,6 +1273,24 @@ components:
           type: integer
         feedforward_type:
           type: string
+    FixValueFeedforward:
+      required:
+      - component_type
+      - source
+      - affected_values
+      - feedforward_type
+      type: object
+      properties:
+        component_type:
+          type: string
+        source:
+          type: string
+        affected_values:
+          type: array
+          items:
+            type: string
+        feedforward_type:
+          type: string
     SemiContinuousFeedforward:
       required:
       - component_type
@@ -1286,6 +1312,7 @@ components:
     AbstractFeedforward:
       oneOf:
       - $ref: '#/components/schemas/EnergyLimitFeedforward'
+      - $ref: '#/components/schemas/FixValueFeedforward'
       - $ref: '#/components/schemas/SemiContinuousFeedforward'
       discriminator:
         propertyName: feedforward_type
