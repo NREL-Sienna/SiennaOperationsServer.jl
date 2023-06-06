@@ -5,13 +5,13 @@ function make_simulation(sim::ApiServer.Simulation, output_dir)
     decision_models = Vector{PSI.DecisionModel}()
     for api_model in sim.models.decision_models
         optimizer_type = make_optimizer(api_model.optimizer.value)
-        kwargs = Dict{String, Any}()
+        optimizer_attributes = Dict{String, Any}()
         for name in fieldnames(typeof(api_model.optimizer.value))
             if name != :optimizer_type
-                kwargs[string(name)] = getproperty(api_model.optimizer.value, name)
+                optimizer_attributes[string(name)] = getproperty(api_model.optimizer.value, name)
             end
         end
-        optimizer = JuMP.optimizer_with_attributes(optimizer_type, kwargs...)
+        optimizer = JuMP.optimizer_with_attributes(optimizer_type, optimizer_attributes...)
         # TODO: Add support for time_series_read_only to PSB.
         sys = _make_system(api_model.system.value)
         decision_problem_type = _convert_string_to_type(PSI, api_model.decision_problem_type)
@@ -50,10 +50,12 @@ function make_simulation(sim::ApiServer.Simulation, output_dir)
 
     models = PSI.SimulationModels(decision_models=decision_models)
     feedforwards = Dict{String, Vector{PSI.AbstractAffectFeedforward}}()
-    for ff_by_model in sim.sequence.feedforwards_by_model
-        feedforwards[ff_by_model.model_name] = Vector{PSI.AbstractAffectFeedforward}()
-        for ff in ff_by_model.feedforwards
-            push!(feedforwards[ff_by_model.model_name], _make_feedforward(ff.value))
+    if !isnothing(sim.sequence.feedforwards_by_model)
+        for ff_by_model in sim.sequence.feedforwards_by_model
+            feedforwards[ff_by_model.model_name] = Vector{PSI.AbstractAffectFeedforward}()
+            for ff in ff_by_model.feedforwards
+                push!(feedforwards[ff_by_model.model_name], _make_feedforward(ff.value))
+            end
         end
     end
 
