@@ -69,7 +69,7 @@ paths:
       description: Store a power simulation.
       operationId: post_simulation
       requestBody:
-        description: Power simulation 
+        description: Power simulation
         content:
           application/json:
             schema:
@@ -682,7 +682,7 @@ paths:
           type: integer
           default: 5
       requestBody:
-        description: Power simulation 
+        description: Power simulation
         content:
           application/json:
             schema:
@@ -1103,6 +1103,9 @@ components:
       properties:
         optimizer_type:
           type: string
+        MIPRELSTOP:
+          type: number
+          default: 1e-6
     AbstractOptimizer:
       oneOf:
       - $ref: '#/components/schemas/CbcOptimizer'
