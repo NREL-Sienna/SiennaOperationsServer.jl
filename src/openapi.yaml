@@ -1,0 +1,1489 @@
+openapi: 3.0.3
+info:
+  title: SiennaOperationsSimulations
+  description: This is a SiennaOperationsSimulations server.
+  license:
+    name: BSD 3-Clause
+  version: 1.0
+paths:
+  /store:
+    post:
+      tags: []
+      summary: Load saved data.
+      description: Load saved data.
+      operationId: load_store
+      requestBody:
+        description: Saved data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+        required: true
+      responses:
+        "200":
+          description: Response
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+    get:
+      tags: []
+      summary: Get the contents of the data store.
+      description: Get the contents of the data store.
+      operationId: get_store
+      responses:
+        "200":
+          description: Response
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+    delete:
+      tags: []
+      summary: Delete the contents of the data store.
+      description: Delete the contents of the data store.
+      operationId: delete_store
+      responses:
+        "200":
+          description: Response
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations:
+    post:
+      tags: []
+      summary: Store a power simulation.
+      description: Store a power simulation.
+      operationId: post_simulation
+      requestBody:
+        description: Power simulation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Simulation'
+        required: true
+      responses:
+        "200":
+          description: Post simulation response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Simulation'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+    get:
+      tags: []
+      summary: Retrieve all simulations.
+      description: Retrieve all simulations.
+      operationId: list_simulations
+      responses:
+        "200":
+          description: All stored power simulations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSimulationsResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+    delete:
+      tags: []
+      summary: Delete all simulations.
+      description: Delete all simulations.
+      operationId: delete_simulations
+      responses:
+        "200":
+          description: message
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{name}:
+    get:
+      summary: Retrieve one simulation.
+      description: Retrieve one simulation.
+      operationId: get_simulation
+      parameters:
+      - name: name
+        in: path
+        description: Simulation name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Power simulation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Simulation'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+    delete:
+      tags: []
+      summary: Remove a stored simulation.
+      description: Remove a stored simulation.
+      operationId: delete_simulation
+      parameters:
+      - name: name
+        in: path
+        description: Simulation name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: message
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Default error response.
+          content:
+            application/json:
+              schema:
+                type: object
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/cache_results:
+    post:
+      summary: Cache the results for a simulation.
+      description: Cache the results for a simulation.
+      operationId: cache_simulation_results
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      tags: []
+      responses:
+        "200":
+          description: Decision problems
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+    delete:
+      summary: Discard the cached results for a simulation.
+      description: Discard the cached results for a simulation.
+      operationId: discard_simulation_results
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      tags: []
+      responses:
+        "200":
+          description: Decision problems
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/cache_results:
+    get:
+      summary: Return the simulations with cached results.
+      description: Return the simulations with cached results.
+      operationId: list_cache_simulation_results
+      tags: []
+      responses:
+        "200":
+          description: Simulation IDs
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/decision_problems:
+    get:
+      summary: Retrieve the decision problem names in a simulation.
+      description: Retrieve the decision problem names in a simulation.
+      operationId: list_decision_problems
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      tags: []
+      responses:
+        "200":
+          description: Decision problems
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNamesResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/aux_variables:
+    get:
+      summary: Retrieve the aux_variable names in a decision problem.
+      description: aux_variable names in a decision problem a simulation.
+      operationId: list_aux_variable_names
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Decision problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Auxiliary variable names
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNamesResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/aux_variables/{aux_variable_name}/realized_results:
+    get:
+      summary: Retrieve the realized results for a aux_variable.
+      description: aux_variable names in a decision problem a simulation.
+      operationId: read_realized_aux_variable_results
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: aux_variable_name
+        in: path
+        description: aux_variable name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Table of results
+          content:
+            application/json:
+              schema:
+                # We could consider transferring as a string instead. Might be faster
+                # for the destination library to decode the table to a dataframe.
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/duals:
+    get:
+      summary: Retrieve the dual names in a decision problem.
+      description: dual names in a decision problem a simulation.
+      operationId: list_dual_names
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Decision problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: dual names
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNamesResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/duals/{dual_name}/realized_results:
+    get:
+      summary: Retrieve the realized results for a dual.
+      description: dual names in a decision problem a simulation.
+      operationId: read_realized_dual_results
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: dual_name
+        in: path
+        description: dual name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Table of results
+          content:
+            application/json:
+              schema:
+                # We could consider transferring as a string instead. Might be faster
+                # for the destination library to decode the table to a dataframe.
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/expressions:
+    get:
+      summary: Retrieve the expression names in a decision problem.
+      description: expression names in a decision problem a simulation.
+      operationId: list_expression_names
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Decision problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: expression names
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNamesResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/expressions/{expression_name}/realized_results:
+    get:
+      summary: Retrieve the realized results for a expression.
+      description: expression names in a decision problem a simulation.
+      operationId: read_realized_expression_results
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: expression_name
+        in: path
+        description: expression name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Table of results
+          content:
+            application/json:
+              schema:
+                # We could consider transferring as a string instead. Might be faster
+                # for the destination library to decode the table to a dataframe.
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/parameters:
+    get:
+      summary: Retrieve the parameter names in a decision problem.
+      description: parameter names in a decision problem a simulation.
+      operationId: list_parameter_names
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Decision problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: parameter names
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNamesResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/parameters/{parameter_name}/realized_results:
+    get:
+      summary: Retrieve the realized results for a parameter.
+      description: parameter names in a decision problem a simulation.
+      operationId: read_realized_parameter_results
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: parameter_name
+        in: path
+        description: parameter name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Table of results
+          content:
+            application/json:
+              schema:
+                # We could consider transferring as a string instead. Might be faster
+                # for the destination library to decode the table to a dataframe.
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/variables:
+    get:
+      summary: Retrieve the variable names in a decision problem.
+      description: variable names in a decision problem a simulation.
+      operationId: list_variable_names
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Decision problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Variable names
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNamesResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/variables/{variable_name}/realized_results:
+    get:
+      summary: Retrieve the realized results for a variable.
+      description: variable names in a decision problem a simulation.
+      operationId: read_realized_variable_results
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: variable_name
+        in: path
+        description: Variable name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Table of results
+          content:
+            application/json:
+              schema:
+                # We could consider transferring as a string instead. Might be faster
+                # for the destination library to decode the table to a dataframe.
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/start:
+    post:
+      tags: []
+      summary: Start a power simulation.
+      description: Start a power simulation.
+      operationId: start_simulation
+      parameters:
+      - name: output_dir
+        in: query
+        description: Simulation output directory
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: poll_interval
+        in: query
+        description: Poll interval on which to check for status.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          default: 5
+      requestBody:
+        description: Power simulation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Simulation'
+        required: true
+      responses:
+        "200":
+          description: Simulation status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartSimulationResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/start:
+    post:
+      summary: Start a simulation that was previously stored.
+      description: Start a simulation that was previously stored.
+      operationId: start_stored_simulation
+      tags: []
+      parameters:
+      - name: id
+        in: path
+        description: Simulation name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: output_dir
+        in: query
+        description: Simulation output directory
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          default: simulation_output
+      - name: poll_interval
+        in: query
+        description: Poll interval on which to check for status.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          default: 5
+      responses:
+        "200":
+          description: Simulation status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartSimulationResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/cancel:
+    post:
+      summary: Cancel a simulation.
+      description: Cancel a simulation
+      operationId: cancel_simulation
+      tags: []
+      parameters:
+      - name: id
+        in: path
+        description: Simulation name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Message
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/statuses:
+    get:
+      summary: Check status for all simulations.
+      description: Check status for all simulations.
+      operationId: list_simulation_statuses
+      parameters:
+      - name: status
+        in: query
+        description: Filter results by simulations with this status.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: clear_progress_events
+        in: query
+        description: Clear progress events, by default true.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: boolean
+          default: true
+      tags: []
+      responses:
+        "200":
+          description: Message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationStatuses'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /simulations/{id}/status:
+    get:
+      summary: Get simulation status.
+      description: Get simulation status
+      operationId: get_simulation_status
+      tags: []
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: int
+      - name: clear_progress_events
+        in: query
+        description: Clear progress events, by default true.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        "200":
+          description: Simulation status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationStatus'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /systems:
+    post:
+      tags: []
+      summary: Load a power system from a file path.
+      description: Load a power system from a file path.
+      operationId: post_system
+      requestBody:
+        description: Post system body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostSystemBody'
+        required: true
+      responses:
+        "200":
+          description: Post system response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/System'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+    get:
+      tags: []
+      summary: Retrieve all systems.
+      description: Retrieve all systems.
+      operationId: list_systems
+      responses:
+        "200":
+          description: All stored systems
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSystemsResponse'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+    delete:
+      tags: []
+      summary: Delete all systems.
+      description: Delete all systems.
+      operationId: delete_systems
+      responses:
+        "200":
+          description: Message
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+  /systems/{uuid}:
+    get:
+      summary: Retrieve one system.
+      description: Retrieve one system.
+      operationId: get_system
+      parameters:
+      - name: uuid
+        in: path
+        description: System UUID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Power system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/System'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+    delete:
+      tags: []
+      summary: Remove a loaded power system.
+      description: Remove a loaded power system.
+      operationId: delete_system
+      parameters:
+      - name: uuid
+        in: path
+        description: System UUID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: message
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Default error response.
+          content:
+            application/json:
+              schema:
+                type: object
+      security: []
+      x-codegen-request-body-name: body
+  /systems/{category}/{name}:
+    post:
+      tags: []
+      summary: Load a power system with PowerSystemCaseBuilder.
+      description: Load a power system with PowerSystemCaseBuilder.
+      operationId: post_system_case
+      parameters:
+      - name: category
+        in: path
+        description: System category
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: name
+        in: path
+        description: System name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: force_build
+        in: query
+        description: Force build of system instead of de-serializataion.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: Post system response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/System'
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
+components:
+  schemas:
+    System:
+      required:
+      - uuid
+      type: object
+      properties:
+        uuid:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        forecast_initial_times:
+          type: array
+          items:
+            type: string
+        forecast_window_count:
+          type:
+            integer
+        forecast_horizon:
+          type:
+            integer
+        forecast_initial_timestamp:
+          type: string
+        forecast_interval:
+          type:
+            string
+        time_series_resolution:
+          type:
+            string
+    CbcOptimizer:
+      required:
+      - optimizer_type
+      type: object
+      properties:
+        optimizer_type:
+          type: string
+    CplexOptimizer:
+      required:
+      - optimizer_type
+      type: object
+      properties:
+        optimizer_type:
+          type: string
+    GlpkOptimizer:
+      required:
+      - optimizer_type
+      type: object
+      properties:
+        optimizer_type:
+          type: string
+        msg_level:
+          type: integer
+          default: 0
+    GurobiOptimizer:
+      required:
+      - optimizer_type
+      type: object
+      properties:
+        optimizer_type:
+          type: string
+    HighsOptimizer:
+      required:
+      - optimizer_type
+      type: object
+      properties:
+        optimizer_type:
+          type: string
+        time_limit:
+          type: number
+          default: 100.0
+        log_to_console:
+          type: boolean
+          default: false
+    IpoptOptimizer:
+      required:
+      - optimizer_type
+      type: object
+      properties:
+        optimizer_type:
+          type: string
+        print_level:
+          type: integer
+          default: 0
+        max_cpu_time:
+          type: number
+          default: 5.0
+    ScsOptimizer:
+      required:
+      - optimizer_type
+      type: object
+      properties:
+        optimizer_type:
+          type: string
+        max_iters:
+          type: integer
+          default: 100000
+        eps:
+          type: number
+          default: 1e-4
+        verbose:
+          type: boolean
+          default: 0
+    XpressOptimizer:
+      required:
+      - optimizer_type
+      type: object
+      properties:
+        optimizer_type:
+          type: string
+        MIPRELSTOP:
+          type: number
+          default: 1e-6
+    AbstractOptimizer:
+      oneOf:
+      - $ref: '#/components/schemas/CbcOptimizer'
+      - $ref: '#/components/schemas/CplexOptimizer'
+      - $ref: '#/components/schemas/GlpkOptimizer'
+      - $ref: '#/components/schemas/GurobiOptimizer'
+      - $ref: '#/components/schemas/HighsOptimizer'
+      - $ref: '#/components/schemas/IpoptOptimizer'
+      - $ref: '#/components/schemas/ScsOptimizer'
+      - $ref: '#/components/schemas/XpressOptimizer'
+      discriminator:
+        propertyName: optimizer_type
+    DeviceModel:
+      type: object
+      properties:
+        device_type:
+          type: string
+        formulation:
+          type: string
+    NetworkModel:
+      type: object
+      properties:
+        network_type:
+          type: string
+        use_slacks:
+          type: boolean
+          default: false
+        ptdf_matrix:
+          type: string
+        duals:
+          type: array
+          items:
+            type: string
+          default: []
+    ServiceModel:
+      type: object
+      properties:
+        service_type:
+          type: string
+        formulation:
+          type: string
+    ProblemTemplate:
+      required:
+      - network
+      type: object
+      properties:
+        network:
+          $ref: '#/components/schemas/NetworkModel'
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceModel'
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceModel'
+    SystemCase:
+      required:
+      - category
+      - name
+      - descriptor_type
+      type: object
+      properties:
+        category:
+          type: string
+        name:
+          type: string
+        descriptor_type:
+          type: string
+    SystemPath:
+      required:
+      - path
+      - descriptor_type
+      type: object
+      properties:
+        path:
+          type: string
+        descriptor_type:
+          type: string
+    Attribute:
+      required:
+      - key
+      - val
+      type: object
+      properties:
+        key:
+          type: string
+        val:
+          oneOf:
+          - string
+          - integer
+          - number
+          - boolean
+    DecisionModel:
+      required:
+      - name
+      - system
+      - template
+      type: object
+      properties:
+        decision_problem_type:
+          type: string
+          default: GenericOpProblem
+        name:
+          type: string
+        template:
+          $ref: '#/components/schemas/ProblemTemplate'
+        system:
+          oneOf:
+          - $ref: '#/components/schemas/SystemCase'
+          - $ref: '#/components/schemas/SystemPath'
+          discriminator:
+            propertyName: descriptor_type
+        optimizer:
+          $ref: '#/components/schemas/AbstractOptimizer'
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attribute'
+        horizon:
+          type: integer
+        warm_start:
+          type: boolean
+        system_to_file:
+          type: boolean
+        initialize_model:
+          type: boolean
+        initialization_file:
+          type: string
+        deserialize_initial_conditions:
+          type: boolean
+        export_pwl_vars:
+          type: boolean
+        allow_fails:
+          type: boolean
+        optimizer_solve_log_print:
+          type: boolean
+        detailed_optimizer_stats:
+          type: boolean
+        calculate_conflict:
+          type: boolean
+        direct_mode_optimizer:
+          type: boolean
+        check_numerical_bounds:
+          type: boolean
+        initial_time:
+          type: string
+        time_series_cache_size:
+          type: integer
+    EnergyLimitFeedforward:
+      required:
+      - component_type
+      - source
+      - affected_values
+      - number_of_periods
+      - feedforward_type
+      type: object
+      properties:
+        component_type:
+          type: string
+        source:
+          type: string
+        affected_values:
+          type: array
+          items:
+            type: string
+        number_of_periods:
+          type: integer
+        feedforward_type:
+          type: string
+    FixValueFeedforward:
+      required:
+      - component_type
+      - source
+      - affected_values
+      - feedforward_type
+      type: object
+      properties:
+        component_type:
+          type: string
+        source:
+          type: string
+        affected_values:
+          type: array
+          items:
+            type: string
+        feedforward_type:
+          type: string
+    SemiContinuousFeedforward:
+      required:
+      - component_type
+      - source
+      - affected_values
+      - feedforward_type
+      type: object
+      properties:
+        component_type:
+          type: string
+        source:
+          type: string
+        affected_values:
+          type: array
+          items:
+            type: string
+        feedforward_type:
+          type: string
+    AbstractFeedforward:
+      oneOf:
+      - $ref: '#/components/schemas/EnergyLimitFeedforward'
+      - $ref: '#/components/schemas/FixValueFeedforward'
+      - $ref: '#/components/schemas/SemiContinuousFeedforward'
+      discriminator:
+        propertyName: feedforward_type
+    Feedforwards:
+      required:
+      - model_name
+      - feedforwards
+      type: object
+      properties:
+        model_name:
+          type: string
+        feedforwards:
+          type: array
+          items:
+            $ref: '#/components/schemas/AbstractFeedforward'
+    SimulationModels:
+      required:
+      - decision_models
+      type: object
+      properties:
+        decision_models:
+          type: array
+          items:
+            $ref: '#/components/schemas/DecisionModel'
+    SimulationSequence:
+      required:
+      - initial_condition_chronology_type
+      - feedforwards_by_model
+      type: object
+      properties:
+        initial_condition_chronology_type:
+          type: string
+        feedforwards_by_model:
+          type: array
+          items:
+            $ref: '#/components/schemas/Feedforwards'
+    Simulation:
+      required:
+      - name
+      - models
+      - sequence
+      type: object
+      properties:
+        name:
+          type: string
+        models:
+          $ref: '#/components/schemas/SimulationModels'
+        sequence:
+          $ref: '#/components/schemas/SimulationSequence'
+        num_steps:
+          type: integer
+    SimulationProgressEvent:
+      type: object
+      required:
+      - model_name
+      - step
+      - index
+      - timestamp
+      - wall_time
+      - exec_time_s
+      properties:
+        model_name:
+          type: string
+        step:
+          type: integer
+        index:
+          type: integer
+        timestamp:
+          type: string
+        wall_time:
+          type: string
+        exec_time_s:
+          type: number
+    SimulationStatus:
+      type: object
+      required:
+        - simulation_id
+        - name
+        - path
+        - status
+        - start_time
+      properties:
+        status:
+          type: string
+          enum:
+          - ready
+          - running
+          - done
+          - canceled
+        simulation_id:
+          type: integer
+        name:
+          type: string
+        path:
+          type: string
+        start_time:
+          type: string
+        return_code:
+          type: integer
+        exec_time_s:
+          type: number
+        worker_pid:
+          type: integer
+        progress_events:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimulationProgressEvent'
+    SimulationStatuses:
+      required:
+      - statuses
+      type: object
+      properties:
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimulationStatus'
+    ListSimulationsResponse:
+      required:
+      - simulations
+      type: object
+      properties:
+        simulations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Simulation'
+    StartSimulationResponse:
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/SimulationStatus'
+    ListSystemsResponse:
+      required:
+      - systems
+      type: object
+      properties:
+        systems:
+          type: array
+          items:
+            $ref: '#/components/schemas/System'
+    PostSystemBody:
+      required:
+      - path
+      type: object
+      properties:
+        path:
+          type: string
+    Store:
+      required:
+      - simulations
+      - statuses
+      type: object
+      properties:
+        simulations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Simulation'
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimulationStatus'
+    ListNamesResponse:
+      required:
+      - names
+      type: object
+      properties:
+        names:
+          type: array
+          items:
+            type: string

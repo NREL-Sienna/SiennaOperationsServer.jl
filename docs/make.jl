@@ -9,7 +9,7 @@ pages = OrderedDict(
 )
 
 makedocs(
-    modules=[SIIP-PACKAGE],
+    modules=[SIIP - PACKAGE],
     format=Documenter.HTML(prettyurls=haskey(ENV, "GITHUB_ACTIONS")),
     sitename="SIIP-PACKAGE.jl",
     authors="Freddy Mercury, Nikola Tesla, Leonard Bernestein",

@@ -1,0 +1,45 @@
+{
+  "name": "no_min_ed",
+  "num_steps": 2,
+  "sequence": {
+    "initial_condition_chronology_type": "InterProblemChronology",
+    "feedforwards_by_model": [
+    ]
+  },
+  "models": {
+    "decision_models": [
+      {
+        "optimizer": {
+          "optimizer_type": "HighsOptimizer"
+        },
+        "decision_problem_type": "EconomicDispatchProblem",
+        "check_numerical_bounds": true,
+        "name": "ed",
+        "template": {
+          "devices": [
+            {
+              "device_type": "PowerLoad",
+              "formulation": "StaticPowerLoad"
+            },
+            {
+              "device_type": "ThermalStandard",
+              "formulation": "ThermalDispatchNoMin"
+            }
+          ],
+          "network": {
+            "network_type": "CopperPlatePowerModel",
+            "use_slacks": false
+          },
+          "services": [
+          ]
+        },
+        "system": {
+          "descriptor_type": "SystemCase",
+          "category": "PSITestSystems",
+          "name": "c_sys5"
+        },
+        "warm_start": true
+      }
+    ]
+  }
+}
