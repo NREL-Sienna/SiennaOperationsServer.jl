@@ -228,7 +228,7 @@ paths:
     get:
       summary: Return the simulations with cached results.
       description: Return the simulations with cached results.
-      operationId: list_cache_simulation_results
+      operationId: list_cached_simulation_results
       tags: []
       responses:
         "200":
@@ -757,7 +757,7 @@ paths:
         style: simple
         explode: false
         schema:
-          type: string
+          type: int
       responses:
         "200":
           description: Message

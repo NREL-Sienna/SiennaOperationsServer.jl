@@ -6,8 +6,6 @@ Base.@kwdef struct CachedInstance{T, U}
 end
 
 Base.@kwdef struct CommunicationChannels
-    "Allows the manager process to control what the worker processes collect."
-    commands::RemoteChannel
     "Allows the worker processes to pass output data to the manager."
     results::RemoteChannel
     "Allows the worker processes to tell the manager that they are done."

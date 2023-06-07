@@ -26,7 +26,11 @@ end
 
 function add_simulation!(manager::Manager, api_sim::ApiServer.Simulation)
     if haskey(manager.simulations, api_sim.name)
-        error("A simulation with name = $(api_sim.name) is already stored")
+        throw(
+            DuplicateValueError(
+                "A simulation with name = $(api_sim.name) is already stored",
+            ),
+        )
     end
     simulation = make_simulation(api_sim, DEFAULT_OUTPUT_DIR)
     manager.simulations[simulation.name] = CachedInstance(api_sim, simulation)
@@ -35,10 +39,9 @@ end
 
 function add_system!(manager::Manager, item)
     if !isfile(item.path)
-        error("path = $(item.path) is not a valid file")
+        throw(NotFoundError("path = $(item.path) is not a valid file"))
     end
-    system = PSY.System(item.path)
-    return _store_system!(manager, system)
+    return _store_system!(manager, PSY.System(item.path))
 end
 
 function add_system_from_case!(manager::Manager, category, name; force_build=false)
@@ -50,12 +53,16 @@ function add_system_from_case!(manager::Manager, category, name; force_build=fal
 end
 
 function get_cached_simulation_instance(manager::Manager, name::String)
-    !haskey(manager.simulations, name) && error("Simulation $name is not stored")
+    if !haskey(manager.simulations, name)
+        throw(NotFoundError("Simulation $name is not stored"))
+    end
     return manager.simulations[name]
 end
 
 function get_cached_system_instance(manager::Manager, uuid::Base.UUID)
-    !haskey(manager.systems, uuid) && error("System $uuid is not stored")
+    if !haskey(manager.systems, uuid)
+        throw(NotFoundError("System $uuid is not stored"))
+    end
     return manager.systems[uuid]
 end
 
@@ -113,7 +120,9 @@ function delete_simulations!(manager::Manager)
 end
 
 function get_simulation_context(manager::Manager, id::Int)
-    !haskey(manager.simulation_contexts, id) && error("Simulation $id is not stored")
+    if !haskey(manager.simulation_contexts, id)
+        throw(NotFoundError("Simulation $id is not stored"))
+    end
     return manager.simulation_contexts[id]
 end
 
@@ -214,7 +223,7 @@ function _get_available_worker!(manager::Manager)
         end
     end
 
-    error("There are no available workers.")
+    throw(TooManyRequestsError("There are no available workers."))
 end
 
 get_num_running_simulations(manager::Manager) = length(manager.in_use_workers)
@@ -231,19 +240,20 @@ function start_simulation_async!(
     num_running = get_num_running_simulations(manager)
     if Distributed.nworkers() - num_running <= 0
         # TODO: implement queuing
-        error(
-            "There are not enough worker processes to run a simulation. " *
-            "num_running=$(num_running) num_workers=$(Distributed.nworkers())",
+        throw(
+            TooManyRequestsError(
+                "There are not enough worker processes to run a simulation. " *
+                "num_running=$(num_running) num_workers=$(Distributed.nworkers())",
+            ),
         )
     end
 
     # This is 1 because any new command will overwrite the previous one.
-    commands = RemoteChannel(() -> Channel{PSI.ControlCommand}(1))
     results = RemoteChannel(() -> Channel{PSI.SimulationIntermediateResult}(10))
     done = RemoteChannel(() -> Channel{SimulationExecutionResult}(1))
 
     worker = _get_available_worker!(manager)
-    channels = CommunicationChannels(commands, results, done)
+    channels = CommunicationChannels(results, done)
     remote_do(run_simulation, worker, simulation, output_dir, channels)
     context = SimulationContext(;
         id=_get_next_simulation_id!(manager),
@@ -293,7 +303,13 @@ Cancel a simulation by sending the equivalent of Ctrl-C to the process.
 function cancel_simulation!(manager::Manager, id::Int)
     context = get_simulation_context(manager, id)
     Distributed.interrupt(context.worker_pid)
-    _complete_simulation!(manager, context, -1; canceled=true)
+    result = SimulationExecutionResult(
+        return_code=-1,
+        build_status=PSI.BuildStatus.EMPTY.value,
+        run_status=PSI.RunStatus.NOT_READY.value,
+        path="",
+    )
+    _complete_simulation!(manager, context, result; canceled=true)
     @info "Canceled simulation $id $(context.name)"
 end
 
@@ -310,7 +326,7 @@ end
 
 function _get_cached_simulation_results(manager, id::Int)
     if !haskey(manager.cached_simulation_results, id)
-        error("Results are not cached for simulation ID $id")
+        throw(NotFoundError("Results are not cached for simulation ID $id"))
     end
     return manager.cached_simulation_results[id]
 end
@@ -332,6 +348,7 @@ function discard_simulation_results!(manager, id::Int)
     if !isnothing(res)
         @info "Discarded cached results for simulation ID $id"
     end
+    return
 end
 
 function list_cached_simulation_results(manager)
@@ -418,7 +435,10 @@ Convert a PowerSystems System to an API System and store it.
 """
 function _store_system!(manager::Manager, system::PSY.System)
     uuid = InfrastructureSystems.get_uuid(system)
-    haskey(manager.systems, uuid) && error("A system with UUID $(uuid) is already stored.")
+    if haskey(manager.systems, uuid)
+        throw(DuplicateValueError("A system with UUID $(uuid) is already stored."))
+    end
+
     resolution = string(Dates.Minute(PSY.get_time_series_resolution(system)))
     api_system = ApiServer.System(;
         uuid=string(uuid),
@@ -453,12 +473,16 @@ function load_store!(manager::Manager, store::ApiServer.Store)
     # Check for errors before adding anything.
     for item in store.simulations
         if haskey(manager.simulations, item.name)
-            error("Simulation $(item.name) is already stored")
+            throw(DuplicateValueError("Simulation $(item.name) is already stored"))
         end
     end
     for item in store.statuses
         if haskey(manager.simulation_contexts, item.simulation_id)
-            error("Simulation ID $(item.simulation_id) is already stored")
+            throw(
+                DuplicateValueError(
+                    "Simulation ID $(item.simulation_id) is already stored",
+                ),
+            )
         end
     end
 
