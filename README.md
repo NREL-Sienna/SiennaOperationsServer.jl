@@ -25,6 +25,9 @@ The scripts to generate server and client code are at:
 - `scripts/openapi/build_server_api.sh`
 - `scripts/openapi/build_python_client.sh`
 
+The auto-generated server code is part of the repository. If you change any APIs then
+you must regenerate the code and make a new commit. This will be automated in the future.
+
 In order to build a distributable Python client package, follow these steps:
 1. Edit the `packageVersion` in `scripts/openapi/config.json`.
 2. Build the client.
