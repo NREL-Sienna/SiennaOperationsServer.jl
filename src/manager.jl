@@ -35,6 +35,7 @@ function add_simulation!(manager::Manager, api_sim::ApiServer.Simulation)
     simulation = make_simulation(api_sim, DEFAULT_OUTPUT_DIR)
     manager.simulations[simulation.name] = CachedInstance(api_sim, simulation)
     @info "Successfully stored" api_sim
+    return api_sim
 end
 
 function add_system!(manager::Manager, item)

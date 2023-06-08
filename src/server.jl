@@ -29,7 +29,6 @@ end
 
 function post_simulation(req::HTTP.Request, api_sim::ApiServer.Simulation)
     @map_exceptions_to_http add_simulation!(manager, api_sim)
-    return api_sim
 end
 
 function post_system(req::HTTP.Request, body::ApiServer.PostSystemBody)
