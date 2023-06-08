@@ -8,22 +8,32 @@ function make_simulation(sim::ApiServer.Simulation, output_dir)
         optimizer_attributes = Dict{String, Any}()
         for name in fieldnames(typeof(api_model.optimizer.value))
             if name != :optimizer_type
-                optimizer_attributes[string(name)] = getproperty(api_model.optimizer.value, name)
+                optimizer_attributes[string(name)] =
+                    getproperty(api_model.optimizer.value, name)
             end
         end
         optimizer = JuMP.optimizer_with_attributes(optimizer_type, optimizer_attributes...)
         # TODO: Add support for time_series_read_only to PSB.
         sys = _make_system(api_model.system.value)
-        decision_problem_type = _convert_string_to_type(PSI, api_model.decision_problem_type)
+        decision_problem_type =
+            _convert_string_to_type(PSI, api_model.decision_problem_type)
         network_type = _convert_string_to_type(PSI, api_model.template.network.network_type)
         use_slacks = api_model.template.network.use_slacks
-        api_duals = isnothing(api_model.template.network.duals) ? [] : api_model.template.network.duals
+        api_duals =
+            isnothing(api_model.template.network.duals) ? [] :
+            api_model.template.network.duals
         duals = [_convert_string_to_type(PSI, x) for x in api_duals]
         if isnothing(api_model.template.network.ptdf_matrix)
             network = PSI.NetworkModel(network_type, use_slacks=use_slacks, duals=duals)
         else
-            ptdf_matrix = _convert_string_to_type(PSI, api_model.template.network.ptdf_matrix)
-            network = PSI.NetworkModel(network_type, use_slacks=use_slacks, duals=duals, PTDF_matrix=ptdf_matrix)
+            ptdf_matrix =
+                _convert_string_to_type(PSI, api_model.template.network.ptdf_matrix)
+            network = PSI.NetworkModel(
+                network_type,
+                use_slacks=use_slacks,
+                duals=duals,
+                PTDF_matrix=ptdf_matrix,
+            )
         end
 
         template = PSI.ProblemTemplate()
@@ -62,7 +72,10 @@ function make_simulation(sim::ApiServer.Simulation, output_dir)
     sequence = PSI.SimulationSequence(;
         models=models,
         feedforwards=feedforwards,
-        ini_cond_chronology=_convert_string_to_type(PSI, sim.sequence.initial_condition_chronology_type)(),
+        ini_cond_chronology=_convert_string_to_type(
+            PSI,
+            sim.sequence.initial_condition_chronology_type,
+        )(),
     )
 
     return PSI.Simulation(
@@ -84,31 +97,51 @@ function run_simulation(simulation::ApiServer.Simulation, output_dir, channels)
         output_dir = DEFAULT_OUTPUT_DIR
     end
     mkpath(output_dir)
-    sim = make_simulation(simulation, output_dir)
-    build_status = PSI.build!(sim; console_level=Logging.AboveMaxLevel)
+    build_status = PSI.BuildStatus.FAILED
     run_status = PSI.RunStatus.NOT_READY
-    path = PSI.get_simulation_dir(sim)
-    if build_status != PSI.BuildStatus.BUILT
-        @error "Failed to build the simulation: $build_status"
-        result = SimulationExecutionResult(
-            return_code=1,
-            build_status=build_status.value,
-            run_status=run_status.value,
-            path=path,
+    path = ""
+    sim = nothing
+
+    try
+        sim = make_simulation(simulation, output_dir)
+    catch e
+        @error "Failed to make_simulation: $e"
+        put!(
+            channels.done,
+            SimulationExecutionResult(
+                return_code=1,
+                build_status=build_status.value,
+                run_status=run_status.value,
+                path=path,
+            ),
         )
-        put!(channels.done, result)
         return
+    end
+
+    try
+        build_status = PSI.build!(sim; console_level=Logging.AboveMaxLevel)
+        path = PSI.get_simulation_dir(sim)
+    finally
+        if build_status != PSI.BuildStatus.BUILT
+            @error "Failed to build the simulation: $build_status"
+            put!(
+                channels.done,
+                SimulationExecutionResult(
+                    return_code=1,
+                    build_status=build_status.value,
+                    run_status=run_status.value,
+                    path=path,
+                ),
+            )
+            return
+        end
     end
 
     @info "Built simulation $(simulation.name)"
     return_code = 1
     try
-        run_status = PSI.execute!(
-            sim;
-            enable_progress_bar=false,
-            commands_channel=channels.commands,
-            results_channel=channels.results,
-        )
+        run_status =
+            PSI.execute!(sim; enable_progress_bar=false, results_channel=channels.results)
         if run_status == PSI.RunStatus.SUCCESSFUL
             return_code = 0
         end
