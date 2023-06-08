@@ -147,6 +147,10 @@ function get_simulation_status!(manager::Manager, id::Int, clear_progress_events
             worker_pid=context.worker_pid,
             progress_events=context.progress_events[:],
         )
+        if status.status == "done"
+            status.return_code = context.return_code
+            status.exec_time_s = context.exec_time_s
+        end
         if clear_progress_events
             empty!(context.progress_events)
         end
