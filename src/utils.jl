@@ -1,3 +1,11 @@
+function _convert_string_to_type(modules::Array{Module}, name)
+    for m in modules
+        if hasproperty(m, Symbol(name))
+            return _convert_string_to_type(m, name)
+        end
+    end
+end
+
 function _convert_string_to_type(mod, name)
     indexes = findall('{', name)
     if isempty(indexes)

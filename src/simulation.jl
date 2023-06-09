@@ -40,7 +40,7 @@ function make_simulation(sim::ApiServer.Simulation, output_dir)
         PSI.set_network_model!(template, network)
         for device_model in api_model.template.devices
             device_type = _convert_string_to_type(PSY, device_model.device_type)
-            formulation_type = _convert_string_to_type(PSI, device_model.formulation)
+            formulation_type = _convert_string_to_type([PSI, SSS], device_model.formulation)
             PSI.set_device_model!(template, device_type, formulation_type)
         end
         for service_model in api_model.template.services
