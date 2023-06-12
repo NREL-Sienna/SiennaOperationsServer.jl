@@ -31,28 +31,33 @@ class Simulation(object):
         'name': 'str',
         'models': 'SimulationModels',
         'sequence': 'SimulationSequence',
-        'num_steps': 'int'
+        'num_steps': 'int',
+        'initial_time': 'str'
     }
 
     attribute_map = {
         'name': 'name',
         'models': 'models',
         'sequence': 'sequence',
-        'num_steps': 'num_steps'
+        'num_steps': 'num_steps',
+        'initial_time': 'initial_time'
     }
 
-    def __init__(self, name=None, models=None, sequence=None, num_steps=None):  # noqa: E501
+    def __init__(self, name=None, models=None, sequence=None, num_steps=1, initial_time=None):  # noqa: E501
         """Simulation - a model defined in Swagger"""  # noqa: E501
         self._name = None
         self._models = None
         self._sequence = None
         self._num_steps = None
+        self._initial_time = None
         self.discriminator = None
         self.name = name
         self.models = models
         self.sequence = sequence
         if num_steps is not None:
             self.num_steps = num_steps
+        if initial_time is not None:
+            self.initial_time = initial_time
 
     @property
     def name(self):
@@ -143,6 +148,27 @@ class Simulation(object):
         """
 
         self._num_steps = num_steps
+
+    @property
+    def initial_time(self):
+        """Gets the initial_time of this Simulation.  # noqa: E501
+
+
+        :return: The initial_time of this Simulation.  # noqa: E501
+        :rtype: str
+        """
+        return self._initial_time
+
+    @initial_time.setter
+    def initial_time(self, initial_time):
+        """Sets the initial_time of this Simulation.
+
+
+        :param initial_time: The initial_time of this Simulation.  # noqa: E501
+        :type: str
+        """
+
+        self._initial_time = initial_time
 
     def to_dict(self):
         """Returns the model properties as a dict"""
