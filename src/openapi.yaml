@@ -1367,6 +1367,9 @@ components:
           $ref: '#/components/schemas/SimulationSequence'
         num_steps:
           type: integer
+          default: 1
+        initial_time:
+          type: string
     SimulationProgressEvent:
       type: object
       required:
