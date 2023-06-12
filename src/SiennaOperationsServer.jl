@@ -13,10 +13,13 @@ import PowerSimulations
 import PowerSystems
 import PowerSystemCaseBuilder
 import JuMP
+import StorageSystemsSimulations
+
 const IS = InfrastructureSystems
 const PSB = PowerSystemCaseBuilder
 const PSI = PowerSimulations
 const PSY = PowerSystems
+const SSS = StorageSystemsSimulations
 
 @template (FUNCTIONS, METHODS) = """
                                  $(TYPEDSIGNATURES)
