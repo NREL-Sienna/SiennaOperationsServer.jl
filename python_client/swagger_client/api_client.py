@@ -74,7 +74,7 @@ class ApiClient(object):
         # Set default User-Agent.
         self.user_agent = 'Swagger-Codegen/1.0.0/python'
 
-    def __del__(self):
+    def close(self):
         self.pool.close()
         self.pool.join()
 
