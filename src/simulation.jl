@@ -87,7 +87,7 @@ function make_simulation(sim::ApiServer.Simulation, output_dir)
     return PSI.Simulation(
         name=sim.name,
         steps=sim.num_steps,
-        initial_time = ini_time,
+        initial_time=ini_time,
         sequence=sequence,
         models=models,
         simulation_folder=output_dir,
@@ -112,7 +112,7 @@ function run_simulation(simulation::ApiServer.Simulation, output_dir, channels)
     try
         sim = make_simulation(simulation, output_dir)
     catch e
-       @error "Failed to make_simulation: $e"
+        @error "Failed to make_simulation: $e"
         put!(
             channels.done,
             SimulationExecutionResult(
