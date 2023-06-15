@@ -30,26 +30,31 @@ class HighsOptimizer(object):
     swagger_types = {
         'optimizer_type': 'str',
         'time_limit': 'float',
-        'log_to_console': 'bool'
+        'log_to_console': 'bool',
+        'mip_rel_gap': 'float'
     }
 
     attribute_map = {
         'optimizer_type': 'optimizer_type',
         'time_limit': 'time_limit',
-        'log_to_console': 'log_to_console'
+        'log_to_console': 'log_to_console',
+        'mip_rel_gap': 'mip_rel_gap'
     }
 
-    def __init__(self, optimizer_type=None, time_limit=100.0, log_to_console=False):  # noqa: E501
+    def __init__(self, optimizer_type=None, time_limit=100.0, log_to_console=False, mip_rel_gap=0.0000010):  # noqa: E501
         """HighsOptimizer - a model defined in Swagger"""  # noqa: E501
         self._optimizer_type = None
         self._time_limit = None
         self._log_to_console = None
+        self._mip_rel_gap = None
         self.discriminator = None
         self.optimizer_type = optimizer_type
         if time_limit is not None:
             self.time_limit = time_limit
         if log_to_console is not None:
             self.log_to_console = log_to_console
+        if mip_rel_gap is not None:
+            self.mip_rel_gap = mip_rel_gap
 
     @property
     def optimizer_type(self):
@@ -115,6 +120,27 @@ class HighsOptimizer(object):
         """
 
         self._log_to_console = log_to_console
+
+    @property
+    def mip_rel_gap(self):
+        """Gets the mip_rel_gap of this HighsOptimizer.  # noqa: E501
+
+
+        :return: The mip_rel_gap of this HighsOptimizer.  # noqa: E501
+        :rtype: float
+        """
+        return self._mip_rel_gap
+
+    @mip_rel_gap.setter
+    def mip_rel_gap(self, mip_rel_gap):
+        """Sets the mip_rel_gap of this HighsOptimizer.
+
+
+        :param mip_rel_gap: The mip_rel_gap of this HighsOptimizer.  # noqa: E501
+        :type: float
+        """
+
+        self._mip_rel_gap = mip_rel_gap
 
     def to_dict(self):
         """Returns the model properties as a dict"""
