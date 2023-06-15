@@ -1,6 +1,9 @@
 #!/bin/bash
 rm -rf src/api_server
-openapi-generator-cli generate \
+docker run \
+    -v $(pwd)/src:/src \
+    openapitools/openapi-generator-cli:v6.6.0 \
+    generate \
     -i src/openapi.yaml \
     -g julia-server \
     -o src/api_server \

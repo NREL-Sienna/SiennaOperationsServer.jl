@@ -12,14 +12,11 @@ allows non-Julia clients to run simulations and process results.
 The HTTP API conforms to the OpenAPI 3.0 specification. Please refer to https://www.openapis.org/
 for more information about OpenAPI.
 
-We use the OpenAPI code generator to build the server library. Install it with this command:
-```
-$ npm install -g @openapitools/openapi-generator-cli
-```
+We use the OpenAPI code generator to build the server library. That generator does not
+currently work for the the Python client and so we are using the Swagger codegen utility instead.
 
-The OpenAPI generator for a Python client does not currently work and so we are using the
-Swagger codegen utility instead. Follow the installation instructions at
-https://swagger.io/docs/open-source-tools/swagger-codegen
+In both cases we download and run specific versions with Docker and so you must have Docker
+installed.
 
 The scripts to generate server and client code are at:
 - `scripts/openapi/build_server_api.sh`
@@ -27,6 +24,12 @@ The scripts to generate server and client code are at:
 
 The auto-generated server code is part of the repository. If you change any APIs then
 you must regenerate the code and make a new commit. This will be automated in the future.
+
+Note that the server code must be formatted with JuliaFormatter.jl. Please run this command before
+pushing the server code:
+```
+$ julia scripts/formatter/formatter_code.jl
+```
 
 In order to build a distributable Python client package, follow these steps:
 1. Edit the `packageVersion` in `scripts/openapi/config.json`.
