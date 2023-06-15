@@ -343,6 +343,18 @@ except ApiException as e:
 api_instance = swagger_client.DefaultApi(swagger_client.ApiClient(configuration))
 id = 56 # int | Simulation ID
 problem_name = 'problem_name_example' # str | Problem name
+
+try:
+    # Retrieve the optimizer stats for a problem.
+    api_response = api_instance.read_optimizer_stats(id, problem_name)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->read_optimizer_stats: %s\n" % e)
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi(swagger_client.ApiClient(configuration))
+id = 56 # int | Simulation ID
+problem_name = 'problem_name_example' # str | Problem name
 aux_variable_name = 'aux_variable_name_example' # str | aux_variable name
 
 try:
@@ -463,6 +475,7 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**post_simulation**](docs/DefaultApi.md#post_simulation) | **POST** /simulations | Store a power simulation.
 *DefaultApi* | [**post_system**](docs/DefaultApi.md#post_system) | **POST** /systems | Load a power system from a file path.
 *DefaultApi* | [**post_system_case**](docs/DefaultApi.md#post_system_case) | **POST** /systems/{category}/{name} | Load a power system with PowerSystemCaseBuilder.
+*DefaultApi* | [**read_optimizer_stats**](docs/DefaultApi.md#read_optimizer_stats) | **GET** /simulations/{id}/problems/{problem_name}/otimizer_stats | Retrieve the optimizer stats for a problem.
 *DefaultApi* | [**read_realized_aux_variable_results**](docs/DefaultApi.md#read_realized_aux_variable_results) | **GET** /simulations/{id}/problems/{problem_name}/aux_variables/{aux_variable_name}/realized_results | Retrieve the realized results for a aux_variable.
 *DefaultApi* | [**read_realized_dual_results**](docs/DefaultApi.md#read_realized_dual_results) | **GET** /simulations/{id}/problems/{problem_name}/duals/{dual_name}/realized_results | Retrieve the realized results for a dual.
 *DefaultApi* | [**read_realized_expression_results**](docs/DefaultApi.md#read_realized_expression_results) | **GET** /simulations/{id}/problems/{problem_name}/expressions/{expression_name}/realized_results | Retrieve the realized results for a expression.

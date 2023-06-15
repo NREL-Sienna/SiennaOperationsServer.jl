@@ -657,6 +657,40 @@ paths:
           description: Default error response.
       security: []
       x-codegen-request-body-name: body
+  /simulations/{id}/problems/{problem_name}/otimizer_stats:
+    get:
+      summary: Retrieve the optimizer stats for a problem.
+      description: Retrieve the optimizer stats for a problem.
+      operationId: read_optimizer_stats
+      parameters:
+      - name: id
+        in: path
+        description: Simulation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: problem_name
+        in: path
+        description: Problem name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      tags: []
+      responses:
+        "200":
+          description: Table of stats
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Default error response.
+      security: []
+      x-codegen-request-body-name: body
   /simulations/start:
     post:
       tags: []

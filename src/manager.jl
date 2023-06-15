@@ -435,6 +435,11 @@ function read_realized_variable_results(
     return PSI.read_realized_variable(results, variable_name)
 end
 
+function read_optimizer_stats(manager::Manager, id::Int, problem_name)
+    results = _get_cached_decision_problem_results(manager, id, problem_name)
+    return PSI.read_optimizer_stats(results)
+end
+
 """
 Convert a PowerSystems System to an API System and store it.
 """

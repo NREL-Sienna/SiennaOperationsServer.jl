@@ -30,6 +30,7 @@ Method | HTTP request | Description
 [**post_simulation**](DefaultApi.md#post_simulation) | **POST** /simulations | Store a power simulation.
 [**post_system**](DefaultApi.md#post_system) | **POST** /systems | Load a power system from a file path.
 [**post_system_case**](DefaultApi.md#post_system_case) | **POST** /systems/{category}/{name} | Load a power system with PowerSystemCaseBuilder.
+[**read_optimizer_stats**](DefaultApi.md#read_optimizer_stats) | **GET** /simulations/{id}/problems/{problem_name}/otimizer_stats | Retrieve the optimizer stats for a problem.
 [**read_realized_aux_variable_results**](DefaultApi.md#read_realized_aux_variable_results) | **GET** /simulations/{id}/problems/{problem_name}/aux_variables/{aux_variable_name}/realized_results | Retrieve the realized results for a aux_variable.
 [**read_realized_dual_results**](DefaultApi.md#read_realized_dual_results) | **GET** /simulations/{id}/problems/{problem_name}/duals/{dual_name}/realized_results | Retrieve the realized results for a dual.
 [**read_realized_expression_results**](DefaultApi.md#read_realized_expression_results) | **GET** /simulations/{id}/problems/{problem_name}/expressions/{expression_name}/realized_results | Retrieve the realized results for a expression.
@@ -777,6 +778,36 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**System**](System.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **read_optimizer_stats**
+> read_optimizer_stats(req::HTTP.Request, id::Int64, problem_name::String;) -> Any
+
+Retrieve the optimizer stats for a problem.
+
+Retrieve the optimizer stats for a problem.
+
+### Required Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **req** | **HTTP.Request** | The HTTP Request object | 
+**id** | **Int64**| Simulation ID | [default to nothing]
+**problem_name** | **String**| Problem name | [default to nothing]
+
+### Return type
+
+**Any**
 
 ### Authorization
 
