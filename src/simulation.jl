@@ -48,12 +48,32 @@ function make_simulation(sim::ApiServer.Simulation, output_dir)
             formulation_type = _convert_string_to_type(PSI, service_model.formulation)
             PSI.set_service_model!(template, service_type, formulation_type)
         end
+        if !isnothing(api_model.initial_time)
+            ini_time = parse(DateTime, sim.initial_time, dateformat"y-m-d HH:MM:SS")
+        else
+            ini_time = Dates.DateTime(0)
+        end
         decision_model = PSI.DecisionModel(
             decision_problem_type,
             template,
             sys;
             name=api_model.name,
             optimizer=optimizer,
+            horizon=api_model.horizon,
+            warm_start=api_model.warm_start,
+            system_to_file=api_model.system_to_file,
+            initialize_model=api_model.initialize_model,
+            initialization_file=api_model.initialization_file,
+            deserialize_initial_conditions=api_model.deserialize_initial_conditions,
+            export_pwl_vars=api_model.export_pwl_vars,
+            allow_fails=api_model.allow_fails,
+            optimizer_solve_log_print=api_model.optimizer_solve_log_print,
+            detailed_optimizer_stats=api_model.detailed_optimizer_stats,
+            calculate_conflict=api_model.calculate_conflict,
+            direct_mode_optimizer=api_model.direct_mode_optimizer,
+            check_numerical_bounds=api_model.check_numerical_bounds,
+            initial_time=ini_time,
+            time_series_cache_size=api_model.time_series_cache_size,
         )
         push!(decision_models, decision_model)
     end
