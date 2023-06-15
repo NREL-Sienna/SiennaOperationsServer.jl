@@ -219,6 +219,14 @@ function read_realized_variable_results(
     )
 end
 
+function read_optimizer_stats(req::HTTP.Request, id::Int, problem_name)
+    @map_exceptions_to_http begin
+        df = read_optimizer_stats(manager, id, problem_name)
+        func(x) = ismissing(x) || (x isa Number && isnan(x)) ? nothing : x
+        JSONTables.objecttable(func.(df))
+    end
+end
+
 function get_store(::HTTP.Request)
     @map_exceptions_to_http get_store(manager)
 end

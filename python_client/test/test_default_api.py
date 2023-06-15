@@ -210,6 +210,13 @@ class TestDefaultApi(unittest.TestCase):
         """
         pass
 
+    def test_read_optimizer_stats(self):
+        """Test case for read_optimizer_stats
+
+        Retrieve the optimizer stats for a problem.  # noqa: E501
+        """
+        pass
+
     def test_read_realized_aux_variable_results(self):
         """Test case for read_realized_aux_variable_results
 

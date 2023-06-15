@@ -67,6 +67,7 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**post_simulation**](docs/DefaultApi.md#post_simulation) | **POST** /simulations | Store a power simulation.
 *DefaultApi* | [**post_system**](docs/DefaultApi.md#post_system) | **POST** /systems | Load a power system from a file path.
 *DefaultApi* | [**post_system_case**](docs/DefaultApi.md#post_system_case) | **POST** /systems/{category}/{name} | Load a power system with PowerSystemCaseBuilder.
+*DefaultApi* | [**read_optimizer_stats**](docs/DefaultApi.md#read_optimizer_stats) | **GET** /simulations/{id}/problems/{problem_name}/otimizer_stats | Retrieve the optimizer stats for a problem.
 *DefaultApi* | [**read_realized_aux_variable_results**](docs/DefaultApi.md#read_realized_aux_variable_results) | **GET** /simulations/{id}/problems/{problem_name}/aux_variables/{aux_variable_name}/realized_results | Retrieve the realized results for a aux_variable.
 *DefaultApi* | [**read_realized_dual_results**](docs/DefaultApi.md#read_realized_dual_results) | **GET** /simulations/{id}/problems/{problem_name}/duals/{dual_name}/realized_results | Retrieve the realized results for a dual.
 *DefaultApi* | [**read_realized_expression_results**](docs/DefaultApi.md#read_realized_expression_results) | **GET** /simulations/{id}/problems/{problem_name}/expressions/{expression_name}/realized_results | Retrieve the realized results for a expression.

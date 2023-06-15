@@ -87,6 +87,9 @@ def test_simulation_results(initialize_api_and_store):
                     data = getattr(api, read_method)(sim_id, problem_name, name)
                     df = pl.DataFrame(data)
                     assert isinstance(df, pl.DataFrame)
+            data = api.read_optimizer_stats(sim_id, problem_name)
+            df = pl.DataFrame(data)
+            assert isinstance(df, pl.DataFrame)
     finally:
         api.discard_simulation_results(sim_id)
 
