@@ -75,7 +75,7 @@ class DecisionModel(object):
         'time_series_cache_size': 'time_series_cache_size'
     }
 
-    def __init__(self, decision_problem_type='GenericOpProblem', name=None, template=None, system=None, optimizer=None, attributes=None, horizon=None, warm_start=None, system_to_file=None, initialize_model=None, initialization_file=None, deserialize_initial_conditions=None, export_pwl_vars=None, allow_fails=None, optimizer_solve_log_print=None, detailed_optimizer_stats=None, calculate_conflict=None, direct_mode_optimizer=None, check_numerical_bounds=None, initial_time=None, time_series_cache_size=None):  # noqa: E501
+    def __init__(self, decision_problem_type='GenericOpProblem', name=None, template=None, system=None, optimizer=None, attributes=None, horizon=0, warm_start=True, system_to_file=True, initialize_model=True, initialization_file='', deserialize_initial_conditions=False, export_pwl_vars=False, allow_fails=False, optimizer_solve_log_print=False, detailed_optimizer_stats=False, calculate_conflict=False, direct_mode_optimizer=False, check_numerical_bounds=True, initial_time=None, time_series_cache_size=1048576):  # noqa: E501
         """DecisionModel - a model defined in Swagger"""  # noqa: E501
         self._decision_problem_type = None
         self._name = None

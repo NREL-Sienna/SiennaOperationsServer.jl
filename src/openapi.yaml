@@ -1067,6 +1067,9 @@ components:
         log_to_console:
           type: boolean
           default: false
+        mip_rel_gap:
+          type: number
+          default: 1e-6
     IpoptOptimizer:
       required:
       - optimizer_type
@@ -1227,34 +1230,48 @@ components:
             $ref: '#/components/schemas/Attribute'
         horizon:
           type: integer
+          default: 0
         warm_start:
           type: boolean
+          default: true
         system_to_file:
           type: boolean
+          default: true
         initialize_model:
           type: boolean
+          default: true
         initialization_file:
           type: string
+          default: ""
         deserialize_initial_conditions:
           type: boolean
+          default: false
         export_pwl_vars:
           type: boolean
+          default: false
         allow_fails:
           type: boolean
+          default: false
         optimizer_solve_log_print:
           type: boolean
+          default: false
         detailed_optimizer_stats:
           type: boolean
+          default: false
         calculate_conflict:
           type: boolean
+          default: false
         direct_mode_optimizer:
           type: boolean
+          default: false
         check_numerical_bounds:
           type: boolean
+          default: true
         initial_time:
           type: string
         time_series_cache_size:
           type: integer
+          default: 1048576
     EnergyLimitFeedforward:
       required:
       - component_type
