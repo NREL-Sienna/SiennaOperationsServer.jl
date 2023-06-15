@@ -1067,6 +1067,9 @@ components:
         log_to_console:
           type: boolean
           default: false
+        mip_rel_gap:
+          type: number
+          default: 1e-6
     IpoptOptimizer:
       required:
       - optimizer_type
