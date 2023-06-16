@@ -18,18 +18,22 @@ currently work for the the Python client and so we are using the Swagger codegen
 In both cases we download and run specific versions with Docker and so you must have Docker
 installed.
 
-The scripts to generate server and client code are at:
-- `scripts/openapi/build_server_api.sh`
-- `scripts/openapi/build_python_client.sh`
+Run this script to build both the server and Python client:
+```
+$ bash scripts/openapi/build_apis.sh
+```
+
+Run these scripts to build them individually:
+```
+$ bash scripts/openapi/build_server_api.sh
+```
+
+```
+$ bash scripts/openapi/build_python_client.sh
+```
 
 The auto-generated server code is part of the repository. If you change any APIs then
 you must regenerate the code and make a new commit. This will be automated in the future.
-
-Note that the server code must be formatted with JuliaFormatter.jl. Please run this command before
-pushing the server code:
-```
-$ julia scripts/formatter/formatter_code.jl
-```
 
 In order to build a distributable Python client package, follow these steps:
 1. Edit the `packageVersion` in `scripts/openapi/config.json`.
@@ -160,6 +164,12 @@ shape: (48, 6)
 ## Development
 
 Contributions to the development and enahancement of Sienna-PACKAGE is welcome. Please see [CONTRIBUTING.md](https://github.com/NREL-Sienna/Sienna-PACKAGE.jl/blob/master/CONTRIBUTING.md) for code contribution guidelines.
+
+Please run this command to format the Julia code before opening a pull request:
+```
+$ julia scripts/formatter/formatter_code.jl
+```
+
 
 ## License
 
