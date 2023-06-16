@@ -4,15 +4,9 @@ Make a PowerSimulation from a simulation defined by the API.
 function make_simulation(sim::ApiServer.Simulation, output_dir)
     decision_models = Vector{PSI.DecisionModel}()
     for api_model in sim.models.decision_models
-        optimizer_type = make_optimizer(api_model.optimizer.value)
-        optimizer_attributes = Dict{String, Any}()
-        for name in fieldnames(typeof(api_model.optimizer.value))
-            if name != :optimizer_type
-                optimizer_attributes[string(name)] =
-                    getproperty(api_model.optimizer.value, name)
-            end
-        end
-        optimizer = JuMP.optimizer_with_attributes(optimizer_type, optimizer_attributes...)
+        optimizer_type = make_optimizer(api_model.optimizer.optimizer_type)
+        attributes = api_model.optimizer.attributes
+        optimizer = JuMP.optimizer_with_attributes(optimizer_type, attributes...)
         # TODO: Add support for time_series_read_only to PSB.
         sys = _make_system(api_model.system.value)
         decision_problem_type =

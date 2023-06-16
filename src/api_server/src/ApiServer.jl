@@ -138,11 +138,10 @@ Optional parameters:
   - `optional_middlewares`: Register one or more optional middlewares to be applied to all requests.
 
 Optional middlewares can be one or more of:
-
-  - `init`: called before the request is processed
-  - `pre_validation`: called after the request is parsed but before validation
-  - `pre_invoke`: called after validation but before the handler is invoked
-  - `post_invoke`: called after the handler is invoked but before the response is sent
+- `init`: called before the request is processed
+- `pre_validation`: called after the request is parsed but before validation
+- `pre_invoke`: called after validation but before the handler is invoked
+- `post_invoke`: called after the handler is invoked but before the response is sent
 
 The order in which middlewares are invoked are:
 `init |> read |> pre_validation |> validate |> pre_invoke |> invoke |> post_invoke`
@@ -159,27 +158,20 @@ end
 
 # export models
 export AbstractFeedforward
-export AbstractOptimizer
 export Attribute
-export CbcOptimizer
-export CplexOptimizer
 export DecisionModel
 export DecisionModelSystem
 export DeviceModel
 export EnergyLimitFeedforward
 export Feedforwards
 export FixValueFeedforward
-export GlpkOptimizer
-export GurobiOptimizer
-export HighsOptimizer
-export IpoptOptimizer
 export ListNamesResponse
 export ListSimulationsResponse
 export ListSystemsResponse
 export NetworkModel
+export Optimizer
 export PostSystemBody
 export ProblemTemplate
-export ScsOptimizer
 export SemiContinuousFeedforward
 export ServiceModel
 export Simulation
@@ -193,6 +185,5 @@ export Store
 export System
 export SystemCase
 export SystemPath
-export XpressOptimizer
 
 end # module ApiServer

@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **name** | **String** |  | [default to nothing]
 **template** | [***ProblemTemplate**](ProblemTemplate.md) |  | [default to nothing]
 **system** | [***DecisionModelSystem**](DecisionModelSystem.md) |  | [default to nothing]
-**optimizer** | [***AbstractOptimizer**](AbstractOptimizer.md) |  | [optional] [default to nothing]
+**optimizer** | [***Optimizer**](Optimizer.md) |  | [optional] [default to nothing]
 **attributes** | [**Vector{Attribute}**](Attribute.md) |  | [optional] [default to nothing]
 **horizon** | **Int64** |  | [optional] [default to 0]
 **warm_start** | **Bool** |  | [optional] [default to true]

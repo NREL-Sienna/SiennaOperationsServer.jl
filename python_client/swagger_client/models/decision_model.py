@@ -32,7 +32,7 @@ class DecisionModel(object):
         'name': 'str',
         'template': 'ProblemTemplate',
         'system': 'OneOfDecisionModelSystem',
-        'optimizer': 'AbstractOptimizer',
+        'optimizer': 'Optimizer',
         'attributes': 'list[Attribute]',
         'horizon': 'int',
         'warm_start': 'bool',
@@ -235,7 +235,7 @@ class DecisionModel(object):
 
 
         :return: The optimizer of this DecisionModel.  # noqa: E501
-        :rtype: AbstractOptimizer
+        :rtype: Optimizer
         """
         return self._optimizer
 
@@ -245,7 +245,7 @@ class DecisionModel(object):
 
 
         :param optimizer: The optimizer of this DecisionModel.  # noqa: E501
-        :type: AbstractOptimizer
+        :type: Optimizer
         """
 
         self._optimizer = optimizer
