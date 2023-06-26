@@ -10,7 +10,10 @@
     "decision_models": [
       {
         "optimizer": {
-          "optimizer_type": "HighsOptimizer"
+          "optimizer_type": "highs",
+          "attributes": {
+            "mip_rel_gap": 1e-5
+          }
         },
         "decision_problem_type": "EconomicDispatchProblem",
         "check_numerical_bounds": true,

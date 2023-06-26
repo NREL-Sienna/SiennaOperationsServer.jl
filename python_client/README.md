@@ -64,7 +64,7 @@ except ApiException as e:
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi(swagger_client.ApiClient(configuration))
-id = swagger_client.ModelInt() # ModelInt | Simulation name
+id = 56 # int | Simulation name
 
 try:
     # Cancel a simulation.
@@ -149,7 +149,7 @@ except ApiException as e:
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi(swagger_client.ApiClient(configuration))
-id = swagger_client.ModelInt() # ModelInt | Simulation ID
+id = 56 # int | Simulation ID
 clear_progress_events = true # bool | Clear progress events, by default true. (optional) (default to true)
 
 try:
@@ -487,27 +487,20 @@ Class | Method | HTTP request | Description
 ## Documentation For Models
 
  - [AbstractFeedforward](docs/AbstractFeedforward.md)
- - [AbstractOptimizer](docs/AbstractOptimizer.md)
  - [Attribute](docs/Attribute.md)
- - [CbcOptimizer](docs/CbcOptimizer.md)
- - [CplexOptimizer](docs/CplexOptimizer.md)
  - [DecisionModel](docs/DecisionModel.md)
  - [DeviceModel](docs/DeviceModel.md)
  - [EnergyLimitFeedforward](docs/EnergyLimitFeedforward.md)
  - [Feedforwards](docs/Feedforwards.md)
  - [FixValueFeedforward](docs/FixValueFeedforward.md)
- - [GlpkOptimizer](docs/GlpkOptimizer.md)
- - [GurobiOptimizer](docs/GurobiOptimizer.md)
- - [HighsOptimizer](docs/HighsOptimizer.md)
- - [IpoptOptimizer](docs/IpoptOptimizer.md)
  - [ListNamesResponse](docs/ListNamesResponse.md)
  - [ListSimulationsResponse](docs/ListSimulationsResponse.md)
  - [ListSystemsResponse](docs/ListSystemsResponse.md)
  - [NetworkModel](docs/NetworkModel.md)
  - [OneOfDecisionModelSystem](docs/OneOfDecisionModelSystem.md)
+ - [Optimizer](docs/Optimizer.md)
  - [PostSystemBody](docs/PostSystemBody.md)
  - [ProblemTemplate](docs/ProblemTemplate.md)
- - [ScsOptimizer](docs/ScsOptimizer.md)
  - [SemiContinuousFeedforward](docs/SemiContinuousFeedforward.md)
  - [ServiceModel](docs/ServiceModel.md)
  - [Simulation](docs/Simulation.md)
@@ -521,7 +514,6 @@ Class | Method | HTTP request | Description
  - [System](docs/System.md)
  - [SystemCase](docs/SystemCase.md)
  - [SystemPath](docs/SystemPath.md)
- - [XpressOptimizer](docs/XpressOptimizer.md)
 
 ## Documentation For Authorization
 

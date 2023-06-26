@@ -14,7 +14,9 @@
         "system_to_file": false,
         "optimizer": {
           "optimizer_type": "XpressOptimizer",
-          "mipgap": 1e-2
+          "attributes": {
+            "mipgap": 1e-2
+          }
         },
         "template": {
           "devices": [

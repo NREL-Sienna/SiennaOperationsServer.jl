@@ -159,27 +159,20 @@ end
 
 # export models
 export AbstractFeedforward
-export AbstractOptimizer
 export Attribute
-export CbcOptimizer
-export CplexOptimizer
 export DecisionModel
 export DecisionModelSystem
 export DeviceModel
 export EnergyLimitFeedforward
 export Feedforwards
 export FixValueFeedforward
-export GlpkOptimizer
-export GurobiOptimizer
-export HighsOptimizer
-export IpoptOptimizer
 export ListNamesResponse
 export ListSimulationsResponse
 export ListSystemsResponse
 export NetworkModel
+export Optimizer
 export PostSystemBody
 export ProblemTemplate
-export ScsOptimizer
 export SemiContinuousFeedforward
 export ServiceModel
 export Simulation
@@ -193,6 +186,5 @@ export Store
 export System
 export SystemCase
 export SystemPath
-export XpressOptimizer
 
 end # module ApiServer

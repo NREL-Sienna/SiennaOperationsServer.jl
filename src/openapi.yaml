@@ -791,7 +791,7 @@ paths:
         style: simple
         explode: false
         schema:
-          type: int
+          type: integer
       responses:
         "200":
           description: Message
@@ -852,7 +852,7 @@ paths:
         style: simple
         explode: false
         schema:
-          type: int
+          type: integer
       - name: clear_progress_events
         in: query
         description: Clear progress events, by default true.
@@ -1057,104 +1057,24 @@ components:
         time_series_resolution:
           type:
             string
-    CbcOptimizer:
+    Optimizer:
       required:
       - optimizer_type
       type: object
       properties:
         optimizer_type:
           type: string
-    CplexOptimizer:
-      required:
-      - optimizer_type
-      type: object
-      properties:
-        optimizer_type:
-          type: string
-    GlpkOptimizer:
-      required:
-      - optimizer_type
-      type: object
-      properties:
-        optimizer_type:
-          type: string
-        msg_level:
-          type: integer
-          default: 0
-    GurobiOptimizer:
-      required:
-      - optimizer_type
-      type: object
-      properties:
-        optimizer_type:
-          type: string
-    HighsOptimizer:
-      required:
-      - optimizer_type
-      type: object
-      properties:
-        optimizer_type:
-          type: string
-        time_limit:
-          type: number
-          default: 100.0
-        log_to_console:
-          type: boolean
-          default: false
-        mip_rel_gap:
-          type: number
-          default: 1e-6
-    IpoptOptimizer:
-      required:
-      - optimizer_type
-      type: object
-      properties:
-        optimizer_type:
-          type: string
-        print_level:
-          type: integer
-          default: 0
-        max_cpu_time:
-          type: number
-          default: 5.0
-    ScsOptimizer:
-      required:
-      - optimizer_type
-      type: object
-      properties:
-        optimizer_type:
-          type: string
-        max_iters:
-          type: integer
-          default: 100000
-        eps:
-          type: number
-          default: 1e-4
-        verbose:
-          type: boolean
-          default: 0
-    XpressOptimizer:
-      required:
-      - optimizer_type
-      type: object
-      properties:
-        optimizer_type:
-          type: string
-        MIPRELSTOP:
-          type: number
-          default: 1e-6
-    AbstractOptimizer:
-      oneOf:
-      - $ref: '#/components/schemas/CbcOptimizer'
-      - $ref: '#/components/schemas/CplexOptimizer'
-      - $ref: '#/components/schemas/GlpkOptimizer'
-      - $ref: '#/components/schemas/GurobiOptimizer'
-      - $ref: '#/components/schemas/HighsOptimizer'
-      - $ref: '#/components/schemas/IpoptOptimizer'
-      - $ref: '#/components/schemas/ScsOptimizer'
-      - $ref: '#/components/schemas/XpressOptimizer'
-      discriminator:
-        propertyName: optimizer_type
+          enum:
+            - cbc
+            - cplex
+            - glpk
+            - gurobi
+            - highs
+            - ipopt
+            - scs
+            - xpress
+        attributes:
+          type: object
     DeviceModel:
       type: object
       properties:
@@ -1257,7 +1177,7 @@ components:
           discriminator:
             propertyName: descriptor_type
         optimizer:
-          $ref: '#/components/schemas/AbstractOptimizer'
+          $ref: '#/components/schemas/Optimizer'
         attributes:
           type: array
           items:

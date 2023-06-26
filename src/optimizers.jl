@@ -1,4 +1,4 @@
-function make_optimizer(optimizer::ApiServer.CbcOptimizer)
+function make_cbc_optimizer()
     try
         @eval Main begin
             import Cbc
@@ -9,7 +9,7 @@ function make_optimizer(optimizer::ApiServer.CbcOptimizer)
     end
 end
 
-function make_optimizer(optimizer::ApiServer.CplexOptimizer)
+function make_cplex_optimizer()
     try
         @eval Main begin
             import CPLEX
@@ -20,7 +20,7 @@ function make_optimizer(optimizer::ApiServer.CplexOptimizer)
     end
 end
 
-function make_optimizer(optimizer::ApiServer.GlpkOptimizer)
+function make_glpk_optimizer()
     try
         @eval Main begin
             import GLPK
@@ -31,7 +31,7 @@ function make_optimizer(optimizer::ApiServer.GlpkOptimizer)
     end
 end
 
-function make_optimizer(optimizer::ApiServer.GurobiOptimizer)
+function make_gurobi_optimizer()
     try
         @eval Main begin
             import Gurobi
@@ -42,7 +42,7 @@ function make_optimizer(optimizer::ApiServer.GurobiOptimizer)
     end
 end
 
-function make_optimizer(optimizer::ApiServer.HighsOptimizer)
+function make_highs_optimizer()
     try
         @eval Main begin
             import HiGHS
@@ -53,7 +53,7 @@ function make_optimizer(optimizer::ApiServer.HighsOptimizer)
     end
 end
 
-function make_optimizer(optimizer::ApiServer.IpoptOptimizer)
+function make_ipopt_optimizer()
     try
         @eval Main begin
             import Ipopt
@@ -64,7 +64,7 @@ function make_optimizer(optimizer::ApiServer.IpoptOptimizer)
     end
 end
 
-function make_optimizer(optimizer::ApiServer.ScsOptimizer)
+function make_scs_optimizer()
     try
         @eval Main begin
             import SCS
@@ -75,7 +75,7 @@ function make_optimizer(optimizer::ApiServer.ScsOptimizer)
     end
 end
 
-function make_optimizer(optimizer::ApiServer.XpressOptimizer)
+function make_xpress_optimizer()
     try
         @eval Main begin
             import Xpress
@@ -84,4 +84,22 @@ function make_optimizer(optimizer::ApiServer.XpressOptimizer)
     catch
         error("The Xpress optimizer must be installed.")
     end
+end
+
+const _OPTIMIZER_MAP = Dict(
+    "cbc" => make_cbc_optimizer,
+    "cplex" => make_cplex_optimizer,
+    "glpk" => make_glpk_optimizer,
+    "gurobi" => make_gurobi_optimizer,
+    "highs" => make_highs_optimizer,
+    "ipopt" => make_ipopt_optimizer,
+    "scs" => make_scs_optimizer,
+    "xpress" => make_xpress_optimizer,
+)
+
+function make_optimizer(optimizer_type::String)
+    if !haskey(_OPTIMIZER_MAP, optimizer_type)
+        error("optimizer_type = $optimizer_type is invalid")
+    end
+    return _OPTIMIZER_MAP[optimizer_type]()
 end

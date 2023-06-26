@@ -81,27 +81,20 @@ Class | Method | HTTP request | Description
 ## Models
 
  - [AbstractFeedforward](docs/AbstractFeedforward.md)
- - [AbstractOptimizer](docs/AbstractOptimizer.md)
  - [Attribute](docs/Attribute.md)
- - [CbcOptimizer](docs/CbcOptimizer.md)
- - [CplexOptimizer](docs/CplexOptimizer.md)
  - [DecisionModel](docs/DecisionModel.md)
  - [DecisionModelSystem](docs/DecisionModelSystem.md)
  - [DeviceModel](docs/DeviceModel.md)
  - [EnergyLimitFeedforward](docs/EnergyLimitFeedforward.md)
  - [Feedforwards](docs/Feedforwards.md)
  - [FixValueFeedforward](docs/FixValueFeedforward.md)
- - [GlpkOptimizer](docs/GlpkOptimizer.md)
- - [GurobiOptimizer](docs/GurobiOptimizer.md)
- - [HighsOptimizer](docs/HighsOptimizer.md)
- - [IpoptOptimizer](docs/IpoptOptimizer.md)
  - [ListNamesResponse](docs/ListNamesResponse.md)
  - [ListSimulationsResponse](docs/ListSimulationsResponse.md)
  - [ListSystemsResponse](docs/ListSystemsResponse.md)
  - [NetworkModel](docs/NetworkModel.md)
+ - [Optimizer](docs/Optimizer.md)
  - [PostSystemBody](docs/PostSystemBody.md)
  - [ProblemTemplate](docs/ProblemTemplate.md)
- - [ScsOptimizer](docs/ScsOptimizer.md)
  - [SemiContinuousFeedforward](docs/SemiContinuousFeedforward.md)
  - [ServiceModel](docs/ServiceModel.md)
  - [Simulation](docs/Simulation.md)
@@ -115,7 +108,6 @@ Class | Method | HTTP request | Description
  - [System](docs/System.md)
  - [SystemCase](docs/SystemCase.md)
  - [SystemPath](docs/SystemPath.md)
- - [XpressOptimizer](docs/XpressOptimizer.md)
 
 
 
