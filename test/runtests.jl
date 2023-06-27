@@ -1,14 +1,17 @@
 using Test
-import Logging
+using Logging
 
 import Aqua
-Aqua.test_unbound_args(SIIP - PACKAGE)
-Aqua.test_undefined_exports(SIIP - PACKAGE)
-Aqua.test_ambiguities(SIIP - PACKAGE)
-Aqua.test_stale_deps(SIIP - PACKAGE)
-Aqua.test_deps_compat(SIIP - PACKAGE)
+using SiennaOperationsServer
+import InfrastructureSystems
+Aqua.test_unbound_args(SiennaOperationsServer)
+Aqua.test_undefined_exports(SiennaOperationsServer)
+Aqua.test_ambiguities(SiennaOperationsServer)
+Aqua.test_stale_deps(SiennaOperationsServer, ignore=[:HiGHS, :Xpress])
+Aqua.test_deps_compat(SiennaOperationsServer)
 
-LOG_FILE = "power-systems.log"
+const IS = InfrastructureSystems
+LOG_FILE = "sienna-operations-server.log"
 LOG_LEVELS = Dict(
     "Debug" => Logging.Debug,
     "Info" => Logging.Info,
