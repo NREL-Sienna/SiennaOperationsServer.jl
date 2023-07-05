@@ -1,5 +1,8 @@
 name: Test-CI
 
+env:
+  XPRESS_JL_SKIP_LIB_CHECK: 1
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]

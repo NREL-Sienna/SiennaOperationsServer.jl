@@ -1,5 +1,8 @@
 name: Main - CI
 
+env:
+  XPRESS_JL_SKIP_LIB_CHECK: 1
+
 on:
   schedule:
   - cron: "0 0 * * 1-5"
