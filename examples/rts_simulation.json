@@ -8,14 +8,15 @@
         "calculate_conflict": true,
         "direct_mode_optimizer": true,
         "initialize_model": true,
-        "optimizer_solve_log_print": false,
+        "optimizer_solve_log_print": true,
         "rebuild_model": false,
         "store_variable_names": true,
         "system_to_file": false,
         "optimizer": {
-          "optimizer_type": "XpressOptimizer",
+          "optimizer_type": "xpress",
           "attributes": {
-            "mipgap": 1e-2
+            "MIPRELSTOP": 1e-2,
+            "SOLTIMELIMIT": 1200
           }
         },
         "template": {
@@ -86,8 +87,11 @@
         "store_variable_names": true,
         "system_to_file": false,
         "optimizer": {
-          "optimizer_type": "XpressOptimizer",
-          "mipgap": 1e-2
+            "optimizer_type": "xpress",
+            "attributes": {
+              "MIPRELSTOP": 1e-2,
+              "SOLTIMELIMIT": 1200
+            }
         },
         "template": {
           "devices": [

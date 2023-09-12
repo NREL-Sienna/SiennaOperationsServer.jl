@@ -11,7 +11,7 @@ config = swagger_client.Configuration()
 config.host = "http://localhost:8081"
 api = swagger_client.DefaultApi(swagger_client.ApiClient(config))
 
-data = json.loads((Path("examples") / "simulation.json").read_text())
+data = json.loads((Path("examples") / "rts_simulation.json").read_text())
 sim = Simulation(**data)
 response = api.start_simulation(sim, output_dir="output_dir", poll_interval=3)
 simulation_id = response.status.simulation_id
