@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **name** | **str** |  | 
 **template** | [**ProblemTemplate**](ProblemTemplate.md) |  | 
 **system** | **OneOfDecisionModelSystem** |  | 
-**optimizer** | [**AbstractOptimizer**](AbstractOptimizer.md) |  | [optional] 
+**optimizer** | [**Optimizer**](Optimizer.md) |  | [optional] 
 **attributes** | [**list[Attribute]**](Attribute.md) |  | [optional] 
 **horizon** | **int** |  | [optional] [default to 0]
 **warm_start** | **bool** |  | [optional] [default to True]

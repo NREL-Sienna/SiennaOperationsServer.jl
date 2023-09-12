@@ -30,7 +30,7 @@
     - name::String
     - template::ProblemTemplate
     - system::DecisionModelSystem
-    - optimizer::AbstractOptimizer
+    - optimizer::Optimizer
     - attributes::Vector{Attribute}
     - horizon::Int64
     - warm_start::Bool
@@ -53,7 +53,7 @@ Base.@kwdef mutable struct DecisionModel <: OpenAPI.APIModel
     name::Union{Nothing, String} = nothing
     template = nothing # spec type: Union{ Nothing, ProblemTemplate }
     system = nothing # spec type: Union{ Nothing, DecisionModelSystem }
-    optimizer = nothing # spec type: Union{ Nothing, AbstractOptimizer }
+    optimizer = nothing # spec type: Union{ Nothing, Optimizer }
     attributes::Union{Nothing, Vector} = nothing # spec type: Union{ Nothing, Vector{Attribute} }
     horizon::Union{Nothing, Int64} = 0
     warm_start::Union{Nothing, Bool} = true
@@ -186,7 +186,7 @@ const _property_types_DecisionModel = Dict{Symbol, String}(
     Symbol("name") => "String",
     Symbol("template") => "ProblemTemplate",
     Symbol("system") => "DecisionModelSystem",
-    Symbol("optimizer") => "AbstractOptimizer",
+    Symbol("optimizer") => "Optimizer",
     Symbol("attributes") => "Vector{Attribute}",
     Symbol("horizon") => "Int64",
     Symbol("warm_start") => "Bool",

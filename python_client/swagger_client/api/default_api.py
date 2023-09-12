@@ -137,7 +137,7 @@ class DefaultApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param ModelInt id: Simulation name (required)
+        :param int id: Simulation name (required)
         :return: object
                  If the method is called asynchronously,
                  returns the request thread.
@@ -159,7 +159,7 @@ class DefaultApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param ModelInt id: Simulation name (required)
+        :param int id: Simulation name (required)
         :return: object
                  If the method is called asynchronously,
                  returns the request thread.
@@ -873,7 +873,7 @@ class DefaultApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param ModelInt id: Simulation ID (required)
+        :param int id: Simulation ID (required)
         :param bool clear_progress_events: Clear progress events, by default true.
         :return: SimulationStatus
                  If the method is called asynchronously,
@@ -896,7 +896,7 @@ class DefaultApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param ModelInt id: Simulation ID (required)
+        :param int id: Simulation ID (required)
         :param bool clear_progress_events: Clear progress events, by default true.
         :return: SimulationStatus
                  If the method is called asynchronously,

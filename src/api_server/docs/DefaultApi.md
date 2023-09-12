@@ -81,7 +81,7 @@ Cancel a simulation
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **req** | **HTTP.Request** | The HTTP Request object | 
-**id** | [**Int64**](.md)| Simulation name | [default to nothing]
+**id** | **Int64**| Simulation name | [default to nothing]
 
 ### Return type
 
@@ -301,7 +301,7 @@ Get simulation status
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **req** | **HTTP.Request** | The HTTP Request object | 
-**id** | [**Int64**](.md)| Simulation ID | [default to nothing]
+**id** | **Int64**| Simulation ID | [default to nothing]
 
 ### Optional Parameters
 

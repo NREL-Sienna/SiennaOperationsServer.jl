@@ -104,7 +104,7 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
-id = swagger_client.ModelInt() # ModelInt | Simulation name
+id = 56 # int | Simulation name
 
 try:
     # Cancel a simulation.
@@ -118,7 +118,7 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**ModelInt**](.md)| Simulation name | 
+ **id** | **int**| Simulation name | 
 
 ### Return type
 
@@ -476,7 +476,7 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
-id = swagger_client.ModelInt() # ModelInt | Simulation ID
+id = 56 # int | Simulation ID
 clear_progress_events = true # bool | Clear progress events, by default true. (optional) (default to true)
 
 try:
@@ -491,7 +491,7 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**ModelInt**](.md)| Simulation ID | 
+ **id** | **int**| Simulation ID | 
  **clear_progress_events** | **bool**| Clear progress events, by default true. | [optional] [default to true]
 
 ### Return type
