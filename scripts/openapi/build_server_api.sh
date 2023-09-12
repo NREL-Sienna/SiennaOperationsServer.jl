@@ -1,6 +1,6 @@
 #!/bin/bash
 rm -rf src/api_server
-docker run \
+docker run \wa
     -v $(pwd)/src:/src \
     openapitools/openapi-generator-cli:v6.6.0 \
     generate \
